@@ -9,9 +9,9 @@ const SearchBar = () => {
         />
         <input
           placeholder="Search for a place..."
-          className="bg-[#262540] flex-1 rounded pl-12 pr-4 placeholder:text-[#D4D3D9]"
+          className="bg-[#262540] flex-1 rounded-xl pl-12 pr-4 placeholder:text-[#D4D3D9]"
         />
-        <button className="bg-[#4658D9] w-[7.125rem] rounded text-white font-medium font-sans text-[1.25rem] capitalize cursor-pointer">
+        <button className="bg-[#4658D9] w-[7.125rem] rounded-xl text-white font-medium font-sans text-[1.25rem] capitalize cursor-pointer">
           search
         </button>
       </div>

@@ -2,26 +2,20 @@
 // import reactLogo from "./assets/react.svg";
 // import viteLogo from "/vite.svg";
 
-import Header from "./components/header";
-import SearchBar from "./components/searchbar";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { LocationStoreProvider } from "./providers/location.store.provider";
+
+import Home from "./Pages/home";
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <>
-      <Header />
-      <main className="container mx-auto">
-        <h1 className="text-center text-white text-[3.25rem] font-bold font-Bricolage">
-          How’s the sky looking today?
-        </h1>
-        <SearchBar />
-        <section className="grid lg:grid-cols-3 mt-12">
-          <div className="lg:col-span-2">
-            <div className="bg-[url('/assets/images/bg-today-large.svg')] w-[50rem] h-[17.875rem]"></div>
-          </div>
-          <div className="lg:col-span-1"></div>
-        </section>
-      </main>
-    </>
+    <QueryClientProvider client={queryClient}>
+      <LocationStoreProvider>
+        <Home />
+      </LocationStoreProvider>
+    </QueryClientProvider>
   );
 }
 

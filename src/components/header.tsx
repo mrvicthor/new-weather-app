@@ -9,7 +9,7 @@ const Header = () => {
             className="h-[2.6875rem]"
           />
         </button>{" "}
-        <button className="text-white flex items-center gap-[10px] h-[2.6875rem] w-[7.4375rem] px-4 bg-[#262540] rounded">
+        <button className="text-white flex items-center gap-[10px] h-[2.6875rem] w-[7.4375rem] px-4 bg-[#262540] rounded-xl">
           <img
             src="/assets/images/icon-units.svg"
             alt="units icon"
