@@ -6,6 +6,9 @@ import { useLocationStore } from "../hooks/useLocationStore";
 import { fetchLocation, fetchWeatherDetails } from "../api";
 import Card from "../components/card";
 import CardWithSpace from "../components/cardWithSpace";
+import type { Forecast } from "../types";
+import DailyForecast from "../components/dailyForecast";
+import { mapWeatherCodeToDescription } from "../utils";
 
 const Home = () => {
   const { setLocation, latitude, longitude } = useLocationStore(
@@ -56,7 +59,21 @@ const Home = () => {
   const formatDay = today.toLocaleDateString("en-US", {
     weekday: "long",
   });
+
+  const dailyForecast: Forecast[] = [];
+  for (let i = 0; i < 7; i++) {
+    const forecast: Forecast = {
+      day: new Date(data.weather.daily.time[i]).toLocaleDateString("en-US", {
+        weekday: "short",
+      }),
+      maxTemp: Math.ceil(data.weather.daily.temperature_2m_max[i]),
+      minTemp: Math.ceil(data.weather.daily.temperature_2m_min[i]),
+      weatherCode: data.weather.daily.weather_code[i],
+    };
+    dailyForecast.push(forecast);
+  }
   console.log(data);
+
   return (
     <>
       <Header />
@@ -78,7 +95,9 @@ const Home = () => {
               </div>
               <div className="flex items-center">
                 <img
-                  src="/assets/images/icon-sunny.webp"
+                  src={mapWeatherCodeToDescription(
+                    data.weather.current.weather_code
+                  )}
                   className="h-[7.5rem] w-[7.5rem]"
                 />
                 <p className="text-white italic text-[6rem] font-bold">
@@ -89,7 +108,7 @@ const Home = () => {
             <div className="grid md:grid-cols-4 mt-8 gap-6">
               <Card
                 title="feels like"
-                value={data.weather.current.temperature_2m}
+                value={data.weather.current.apparent_temperature}
                 unit={data.weather.current_units.temperature_2m}
               />
               <Card
@@ -112,6 +131,7 @@ const Home = () => {
               <p className="text-white text-[1.25rem] font-semibold">
                 Daily forecast
               </p>
+              <DailyForecast data={dailyForecast} />
             </div>
           </div>
           <div className="bg-[#262540] rounded-[1.25rem] px-6 py-6">
