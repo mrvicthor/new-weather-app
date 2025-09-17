@@ -6,9 +6,10 @@ import { useLocationStore } from "../hooks/useLocationStore";
 import { fetchLocation, fetchWeatherDetails } from "../api";
 import Card from "../components/card";
 import CardWithSpace from "../components/cardWithSpace";
-import type { Forecast } from "../types";
+import type { Forecast, HourlyForecast } from "../types";
 import DailyForecast from "../components/dailyForecast";
 import { mapWeatherCodeToDescription } from "../utils";
+import HourlyForecasts from "../components/hourlyForecasts";
 
 const Home = () => {
   const { setLocation, latitude, longitude } = useLocationStore(
@@ -60,6 +61,7 @@ const Home = () => {
     weekday: "long",
   });
 
+  const hourlyForecast: HourlyForecast[] = [];
   const dailyForecast: Forecast[] = [];
   for (let i = 0; i < 7; i++) {
     const forecast: Forecast = {
@@ -72,7 +74,20 @@ const Home = () => {
     };
     dailyForecast.push(forecast);
   }
-  console.log(data);
+
+  for (let i = 0; i < 24; i++) {
+    const forecast: HourlyForecast = {
+      weatherCode: data.weather.hourly.weather_code[i],
+      time: new Date(data.weather.hourly.time[i]).toLocaleDateString("en-US", {
+        hour: "2-digit",
+      }),
+      temperature: Math.ceil(data.weather.hourly.temperature_2m[i]),
+    };
+
+    hourlyForecast.push(forecast);
+  }
+
+  console.log(hourlyForecast);
 
   return (
     <>
@@ -82,7 +97,7 @@ const Home = () => {
           How’s the sky looking today?
         </h1>
         <SearchBar />
-        <section className="grid lg:grid-cols-3 mt-12 gap-8">
+        <section className="grid lg:grid-cols-3 grid-rows-[43.3125rem] mt-12 gap-8">
           <div className="lg:col-span-2">
             <div className="bg-[url('/assets/images/bg-today-large.svg')] h-[17.875rem] bg-cover bg-center bg-no-repeat rounded-[1.25rem] flex items-center px-6">
               <div className="flex-1">
@@ -101,14 +116,14 @@ const Home = () => {
                   className="h-[7.5rem] w-[7.5rem]"
                 />
                 <p className="text-white italic text-[6rem] font-bold">
-                  {data.weather.current.temperature_2m}&deg;
+                  {Math.ceil(data.weather.current.temperature_2m)}&deg;
                 </p>
               </div>
             </div>
             <div className="grid md:grid-cols-4 mt-8 gap-6">
               <Card
                 title="feels like"
-                value={data.weather.current.apparent_temperature}
+                value={Math.ceil(data.weather.current.apparent_temperature)}
                 unit={data.weather.current_units.temperature_2m}
               />
               <Card
@@ -127,7 +142,7 @@ const Home = () => {
                 unit={data.weather.current_units.precipitation}
               />
             </div>
-            <div className="mt-12">
+            <div className="mt-12 h-[43.3125rem]">
               <p className="text-white text-[1.25rem] font-semibold">
                 Daily forecast
               </p>
@@ -139,11 +154,12 @@ const Home = () => {
               <p className="text-[1.25rem] font-semibold text-white">
                 Hourly forecast
               </p>
-              <button className="w-[7.5rem] py-2 px-4 bg-[#3C3B5E] flex items-center justify-between rounded-lg capitalize text-white">
+              <button className="py-2 px-4 bg-[#3C3B5E] flex items-center gap-1 justify-between rounded-lg capitalize text-white cursor-pointer">
                 {formatDay}
                 <img src="/assets/images/icon-dropdown.svg" />
               </button>
             </div>
+            <HourlyForecasts data={hourlyForecast} />
           </div>
         </section>
       </main>

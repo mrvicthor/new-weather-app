@@ -4,3 +4,9 @@ export interface Forecast {
   minTemp: number;
   weatherCode: number;
 }
+
+export interface HourlyForecast {
+  weatherCode: number;
+  time: string;
+  temperature: number;
+}
