@@ -1,4 +1,12 @@
+import type { ChangeEvent } from "react";
+import { useLocationStore } from "../hooks/useLocationStore";
+
 const SearchBar = () => {
+  const { searchQuery, setSearchQuery } = useLocationStore((state) => state);
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
   return (
     <section className=" flex items-center justify-center mt-16">
       <div className="relative h-[3.5rem] w-[41rem] flex gap-4">
@@ -9,6 +17,8 @@ const SearchBar = () => {
         />
         <input
           placeholder="Search for a place..."
+          value={searchQuery}
+          onChange={handleInputChange}
           className="bg-[#262540] flex-1 rounded-xl pl-12 pr-4 placeholder:text-[#D4D3D9]"
         />
         <button className="bg-[#4658D9] w-[7.125rem] rounded-xl text-white font-medium font-sans text-[1.25rem] capitalize cursor-pointer">
