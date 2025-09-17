@@ -1,5 +1,7 @@
 import type { Forecast } from "../types";
-import { mapWeatherCodeToDescription } from "../utils";
+import { list, listItem } from "../utils";
+import { mapWeatherCodeToDescription } from "../utils/mapWeatherCodeToDescription";
+import { motion } from "motion/react";
 
 type DailyForecastProps = {
   data: Forecast[];
@@ -7,9 +9,18 @@ type DailyForecastProps = {
 const DailyForecast = ({ data }: DailyForecastProps) => {
   return (
     <div className="mt-5">
-      <ul className="grid md:grid-cols-7 gap-4">
+      <motion.ul
+        variants={list}
+        initial="hidden"
+        animate="visible"
+        className="grid md:grid-cols-7 gap-4"
+      >
         {data.map((forecast) => (
-          <li key={forecast.day} className="p-4 bg-[#3C3B5E] rounded-xl">
+          <motion.li
+            variants={listItem}
+            key={forecast.day}
+            className="p-4 bg-[#3C3B5E] rounded-xl"
+          >
             <span className="text-center block text-lg text-white font-medium">
               {forecast.day}
             </span>
@@ -22,9 +33,9 @@ const DailyForecast = ({ data }: DailyForecastProps) => {
                 {forecast.minTemp}&deg;
               </span>
             </div>
-          </li>
+          </motion.li>
         ))}
-      </ul>
+      </motion.ul>
     </div>
   );
 };

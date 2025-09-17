@@ -1,7 +1,8 @@
 import { motion } from "motion/react";
 import type { HourlyForecast } from "../types";
-import { mapWeatherCodeToDescription } from "../utils";
+import { mapWeatherCodeToDescription } from "../utils/mapWeatherCodeToDescription";
 import { formatTime } from "../utils/formatTime";
+import { list, listItem } from "../utils";
 
 type HourlyForecastProp = {
   data: HourlyForecast[];
@@ -9,9 +10,15 @@ type HourlyForecastProp = {
 
 const HourlyForecasts = ({ data }: HourlyForecastProp) => {
   return (
-    <motion.ul className="space-y-4 mt-4 overflow-y-auto h-[36.5rem]">
+    <motion.ul
+      variants={list}
+      initial="hidden"
+      animate="visible"
+      className="space-y-4 mt-4 overflow-y-auto h-[36.5rem]"
+    >
       {data.map((item, index) => (
         <motion.li
+          variants={listItem}
           key={index}
           className="flex text-white items-center justify-between px-3 py-[1.125rem] bg-[#302F4A] rounded-lg"
         >

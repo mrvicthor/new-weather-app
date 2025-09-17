@@ -8,7 +8,7 @@ import Card from "../components/card";
 import CardWithSpace from "../components/cardWithSpace";
 import type { Forecast, HourlyForecast } from "../types";
 import DailyForecast from "../components/dailyForecast";
-import { mapWeatherCodeToDescription } from "../utils";
+import { mapWeatherCodeToDescription } from "../utils/mapWeatherCodeToDescription";
 import HourlyForecasts from "../components/hourlyForecasts";
 
 const Home = () => {
