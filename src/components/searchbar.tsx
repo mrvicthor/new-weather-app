@@ -1,14 +1,39 @@
-import type { ChangeEvent } from "react";
+import { type ChangeEvent } from "react";
 import { useLocationStore } from "../hooks/useLocationStore";
+import { fetchLocationWeather } from "../api";
+import { useDebounce } from "../hooks/useDebounce";
+import { useQuery } from "@tanstack/react-query";
 
 const SearchBar = () => {
-  const { searchQuery, setSearchQuery } = useLocationStore((state) => state);
+  const { searchQuery, setSearchQuery, setSearchResults } = useLocationStore(
+    (state) => state
+  );
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
 
+  const debounceValue = useDebounce(searchQuery);
+
+  const handleSearch = async () => {
+    const result = await fetchLocationWeather(debounceValue);
+    setSearchResults(result.results);
+  };
+
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["search", debounceValue],
+    queryFn: async () => {
+      if (!debounceValue) return [];
+      const data = await fetchLocationWeather(debounceValue);
+      setSearchResults(data.results || null);
+      return data.results;
+    },
+    enabled: debounceValue.length > 0,
+  });
+
+  console.log({ debounceValue, data });
+
   return (
-    <section className=" flex items-center justify-center mt-16">
+    <section className="relative flex items-center justify-center mt-16">
       <div className="relative h-[3.5rem] w-[41rem] flex gap-4">
         <img
           src="/assets/images/icon-search.svg"
@@ -19,11 +44,37 @@ const SearchBar = () => {
           placeholder="Search for a place..."
           value={searchQuery}
           onChange={handleInputChange}
-          className="bg-[#262540] flex-1 rounded-xl pl-12 pr-4 placeholder:text-[#D4D3D9]"
+          className="bg-[#262540] flex-1 rounded-xl pl-12 pr-4 placeholder:text-[#D4D3D9] text-white"
         />
-        <button className="bg-[#4658D9] w-[7.125rem] rounded-xl text-white font-medium font-sans text-[1.25rem] capitalize cursor-pointer">
+        <button
+          onClick={handleSearch}
+          className="bg-[#4658D9] w-[7.125rem] rounded-xl text-white font-medium font-sans text-[1.25rem] capitalize cursor-pointer"
+        >
           search
         </button>
+        {debounceValue && (
+          <ul className="absolute top-[4rem] bg-[#262540] px-2 py-3 w-[33rem] rounded-lg max-h-60 overflow-y-auto z-50">
+            {isLoading && (
+              <li className="text-white p-4 border-b border-b-[#3C3B5E] h-[2.4375rem] flex gap-4 items-center">
+                <img src="/assets/images/icon-loading.svg" alt="loading" />{" "}
+                Search in progress
+              </li>
+            )}
+            {error && (
+              <li className="text-white p-4 border-b border-b-[#3C3B5E] ">
+                Error fetching data
+              </li>
+            )}
+            {data?.map((city) => (
+              <li
+                key={city.id}
+                className="text-white rounded-lg hover:bg-[#3C3B5E] cursor-pointer px-2 py-[0.625rem]"
+              >
+                {city.name}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </section>
   );

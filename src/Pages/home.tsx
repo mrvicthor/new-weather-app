@@ -12,7 +12,7 @@ import { mapWeatherCodeToDescription } from "../utils/mapWeatherCodeToDescriptio
 import HourlyForecasts from "../components/hourlyForecasts";
 
 const Home = () => {
-  const { setLocation, latitude, longitude } = useLocationStore(
+  const { setLocation, latitude, longitude, searchResults } = useLocationStore(
     (state) => state
   );
 
@@ -87,16 +87,17 @@ const Home = () => {
     hourlyForecast.push(forecast);
   }
 
-  console.log(hourlyForecast);
-
+  console.log({ searchResults });
   return (
     <>
       <Header />
-      <main className="container mx-auto">
+      <main className="container mx-auto relative px-4 md:px-6">
         <h1 className="text-center text-white text-[3.25rem] font-bold font-Bricolage">
           How’s the sky looking today?
         </h1>
+
         <SearchBar />
+
         <section className="grid lg:grid-cols-3 grid-rows-[43.3125rem] mt-12 gap-8">
           <div className="lg:col-span-2">
             <div className="bg-[url('/assets/images/bg-today-large.svg')] h-[17.875rem] bg-cover bg-center bg-no-repeat rounded-[1.25rem] flex items-center px-6">
