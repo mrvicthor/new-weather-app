@@ -3,7 +3,11 @@ import { useQuery } from "@tanstack/react-query";
 import Header from "../components/header";
 import SearchBar from "../components/searchbar";
 import { useLocationStore } from "../hooks/useLocationStore";
-import { fetchLocation, fetchWeatherDetails } from "../api";
+import {
+  fetchLocation,
+  fetchLocationWeather,
+  fetchWeatherDetails,
+} from "../api";
 import Card from "../components/card";
 import CardWithSpace from "../components/cardWithSpace";
 import type { Forecast, HourlyForecast } from "../types";
@@ -13,9 +17,10 @@ import HourlyForecasts from "../components/hourlyForecasts";
 import ErrorPage from "../components/errorPage";
 import { useDebounce } from "../hooks/useDebounce";
 import Loading from "../components/loading";
+import { createPortal } from "react-dom";
 
 const Home = () => {
-  const { setLocation, latitude, longitude, searchResults, searchQuery } =
+  const { setLocation, latitude, longitude, searchQuery, setSearchQuery } =
     useLocationStore((state) => state);
 
   const debouncedValue = useDebounce(searchQuery);
@@ -28,8 +33,25 @@ const Home = () => {
     }
   }, [setLocation]);
 
+  const {
+    data: searchResults,
+    error,
+    isLoading,
+  } = useQuery({
+    queryKey: ["search", debouncedValue],
+    queryFn: async () => {
+      if (!debouncedValue) return [];
+
+      const data = await fetchLocationWeather(debouncedValue);
+      if (!data || !data.results) return [];
+
+      return data.results;
+    },
+    enabled: debouncedValue.length > 0,
+  });
+
   const { data, isError, isPending } = useQuery({
-    queryKey: ["location"],
+    queryKey: ["location", latitude, longitude],
     queryFn: async () => {
       if (latitude == null || longitude == null)
         return Promise.reject("No location");
@@ -89,7 +111,7 @@ const Home = () => {
 
     hourlyForecast.push(forecast);
   }
-  console.log(searchResults);
+
   return (
     <>
       <Header />
@@ -97,16 +119,47 @@ const Home = () => {
         <h1 className="text-center text-white text-[3.25rem] font-bold font-Bricolage">
           How’s the sky looking today?
         </h1>
+        <section className="relative flex flex-col items-center justify-center lg:mt-16 mt-12">
+          <SearchBar />
+          <div className="relative w-[41rem] gap-4">
+            {debouncedValue && searchResults && searchResults.length > 0 && (
+              <ul className="absolute top-4 bg-[#262540] px-2 py-3 right-0 left-0 md:w-[33rem] rounded-lg max-h-60 overflow-y-auto z-50">
+                {isLoading && (
+                  <li className="text-white p-4 border-b border-b-[#3C3B5E] h-[2.4375rem] flex gap-4 items-center">
+                    <img src="/assets/images/icon-loading.svg" alt="loading" />{" "}
+                    Search in progress
+                  </li>
+                )}
 
-        <SearchBar />
+                {searchResults?.map((city) => (
+                  <li
+                    key={city.id}
+                    className="text-white rounded-lg hover:bg-[#3C3B5E] cursor-pointer px-2 py-[0.625rem]"
+                    onClick={() => {
+                      setLocation(city.latitude, city.longitude);
+                      setSearchQuery("");
+                    }}
+                  >
+                    {city.name}, {city.country}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </section>
 
-        {!debouncedValue && (
+        {searchResults && searchResults.length === 0 ? (
+          <p className="text-white mt-12 text-center font-bold text-[1.75rem]">
+            No search results found
+          </p>
+        ) : (
           <section className="grid lg:grid-cols-3 md:grid-rows-[43.3125rem] mt-8 lg:mt-12 gap-8">
             <div className="lg:col-span-2">
               <div className="bg-[url('/assets/images/bg-today-small.svg')] md:bg-[url('/assets/images/bg-today-large.svg')] h-[17.875rem] bg-cover bg-center bg-no-repeat rounded-[1.25rem] flex flex-col justify-center md:flex-row items-center px-6">
                 <div className="md:flex-1">
                   <h2 className="font-sans text-[1.75rem] font-bold text-white">
-                    {data.location.address.city}, {data.location.address.state}
+                    {data.location.address.city ?? data.location.address.state},{" "}
+                    {data.location.address.country}
                   </h2>
                   <p className="text-[1.125rem] font-medium opacity:80 text-white mt-3">
                     {formattedDate}
@@ -167,12 +220,8 @@ const Home = () => {
             </div>
           </section>
         )}
-        {debouncedValue && searchResults && searchResults.length === 0 && (
-          <p className="text-white mt-12 text-center font-bold text-[1.75rem]">
-            No search results found
-          </p>
-        )}
       </main>
+      {error && createPortal(<ErrorPage />, document.getElementById("root")!)}
     </>
   );
 };

@@ -18,7 +18,7 @@ export type SearchResult = {
   country_code: string;
   country_id: number;
   elevation: number;
-  feature_code: "PPLA2";
+  feature_code: string;
   id: number;
   latitude: number;
   longitude: number;
