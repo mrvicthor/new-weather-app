@@ -44,7 +44,7 @@ const SearchBar = () => {
           placeholder="Search for a place..."
           value={searchQuery}
           onChange={handleInputChange}
-          className="bg-[#262540] h-14 md:flex-1 border border-amber-300 rounded-xl pl-12 pr-4 placeholder:text-[#D4D3D9] text-white"
+          className="bg-[#262540] h-14 md:flex-1 rounded-xl pl-12 pr-4 placeholder:text-[#D4D3D9] text-white"
         />
         <button
           onClick={handleSearch}

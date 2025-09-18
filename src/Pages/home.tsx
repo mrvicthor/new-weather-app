@@ -10,6 +10,7 @@ import type { Forecast, HourlyForecast } from "../types";
 import DailyForecast from "../components/dailyForecast";
 import { mapWeatherCodeToDescription } from "../utils/mapWeatherCodeToDescription";
 import HourlyForecasts from "../components/hourlyForecasts";
+import ErrorPage from "../components/errorPage";
 
 const Home = () => {
   const { setLocation, latitude, longitude, searchResults } = useLocationStore(
@@ -25,7 +26,7 @@ const Home = () => {
     }
   }, [setLocation]);
 
-  const { data, isError, isPending, error } = useQuery({
+  const { data, isError, isPending } = useQuery({
     queryKey: ["location"],
     queryFn: async () => {
       if (latitude == null || longitude == null)
@@ -44,7 +45,7 @@ const Home = () => {
   }
 
   if (isError) {
-    return <span className="text-white">Error: {error.message}</span>;
+    return <ErrorPage />;
   }
 
   const today = new Date(data.weather.current.time);
