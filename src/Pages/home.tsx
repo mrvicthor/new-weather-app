@@ -142,14 +142,14 @@ const Home = () => {
                 unit={data.weather.current_units.precipitation}
               />
             </div>
-            <div className="mt-12 h-[43.3125rem]">
+            <div className="mt-12">
               <p className="text-white text-[1.25rem] font-semibold">
                 Daily forecast
               </p>
               <DailyForecast data={dailyForecast} />
             </div>
           </div>
-          <div className="bg-[#262540] rounded-[1.25rem] px-6 py-6">
+          <div className="bg-[#262540] rounded-[1.25rem] px-6 py-6 ">
             <div className="flex justify-between items-center">
               <p className="text-[1.25rem] font-semibold text-white">
                 Hourly forecast
