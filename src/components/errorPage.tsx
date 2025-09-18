@@ -5,7 +5,7 @@ const ErrorPage = () => {
     window.location.reload();
   };
   return (
-    <section>
+    <section className="fixed inset-0 bg-[#02012C] z-50">
       <Header />
 
       <div className="containe mx-auto flex flex-col items-center justify-center text-white space-y-6 mt-16 py-10">

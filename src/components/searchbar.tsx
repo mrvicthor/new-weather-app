@@ -1,13 +1,14 @@
 import { type ChangeEvent } from "react";
+import { createPortal } from "react-dom";
 import { useLocationStore } from "../hooks/useLocationStore";
 import { fetchLocationWeather } from "../api";
 import { useDebounce } from "../hooks/useDebounce";
 import { useQuery } from "@tanstack/react-query";
+import ErrorPage from "./errorPage";
 
 const SearchBar = () => {
-  const { searchQuery, setSearchQuery, setSearchResults } = useLocationStore(
-    (state) => state
-  );
+  const { searchQuery, setSearchQuery, setSearchResults, searchResults } =
+    useLocationStore((state) => state);
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
@@ -24,13 +25,17 @@ const SearchBar = () => {
     queryFn: async () => {
       if (!debounceValue) return [];
       const data = await fetchLocationWeather(debounceValue);
+      if (!data || !data.results) {
+        setSearchResults([]);
+        return [];
+      }
       setSearchResults(data.results || null);
       return data.results;
     },
     enabled: debounceValue.length > 0,
   });
 
-  console.log({ debounceValue, data });
+  console.log({ debounceValue, data, searchResults });
 
   return (
     <section className="relative flex items-center justify-center lg:mt-16 mt-12">
@@ -52,19 +57,15 @@ const SearchBar = () => {
         >
           search
         </button>
-        {debounceValue && (
-          <ul className="absolute top-[4rem] bg-[#262540] px-2 py-3 w-[33rem] rounded-lg max-h-60 overflow-y-auto z-50">
+        {debounceValue && data && data.length > 0 && (
+          <ul className="absolute top-[4rem] bg-[#262540] px-2 py-3 right-0 left-0 rounded-lg max-h-60 overflow-y-auto z-50">
             {isLoading && (
               <li className="text-white p-4 border-b border-b-[#3C3B5E] h-[2.4375rem] flex gap-4 items-center">
                 <img src="/assets/images/icon-loading.svg" alt="loading" />{" "}
                 Search in progress
               </li>
             )}
-            {error && (
-              <li className="text-white p-4 border-b border-b-[#3C3B5E] ">
-                Error fetching data
-              </li>
-            )}
+
             {data?.map((city) => (
               <li
                 key={city.id}
@@ -76,6 +77,7 @@ const SearchBar = () => {
           </ul>
         )}
       </div>
+      {error && createPortal(<ErrorPage />, document.getElementById("root")!)}
     </section>
   );
 };
