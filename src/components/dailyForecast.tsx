@@ -13,7 +13,7 @@ const DailyForecast = ({ data }: DailyForecastProps) => {
         variants={list}
         initial="hidden"
         animate="visible"
-        className="grid md:grid-cols-7 gap-4"
+        className="grid grid-cols-3 md:grid-cols-7 gap-4"
       >
         {data.map((forecast) => (
           <motion.li
