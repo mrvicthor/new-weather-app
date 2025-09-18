@@ -100,7 +100,7 @@ const Home = () => {
 
         <SearchBar />
 
-        {!debouncedValue ? (
+        {!debouncedValue && (
           <section className="grid lg:grid-cols-3 md:grid-rows-[43.3125rem] mt-8 lg:mt-12 gap-8">
             <div className="lg:col-span-2">
               <div className="bg-[url('/assets/images/bg-today-small.svg')] md:bg-[url('/assets/images/bg-today-large.svg')] h-[17.875rem] bg-cover bg-center bg-no-repeat rounded-[1.25rem] flex flex-col justify-center md:flex-row items-center px-6">
@@ -166,7 +166,8 @@ const Home = () => {
               <HourlyForecasts data={hourlyForecast} />
             </div>
           </section>
-        ) : (
+        )}
+        {debouncedValue && searchResults && searchResults.length === 0 && (
           <p className="text-white mt-12 text-center font-bold text-[1.75rem]">
             No search results found
           </p>

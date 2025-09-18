@@ -58,7 +58,7 @@ const SearchBar = () => {
           search
         </button>
         {debounceValue && data && data.length > 0 && (
-          <ul className="absolute top-[4rem] bg-[#262540] px-2 py-3 right-0 left-0 rounded-lg max-h-60 overflow-y-auto z-50">
+          <ul className="absolute top-[4rem] bg-[#262540] px-2 py-3 right-0 left-0 md:w-[33rem] rounded-lg max-h-60 overflow-y-auto z-50">
             {isLoading && (
               <li className="text-white p-4 border-b border-b-[#3C3B5E] h-[2.4375rem] flex gap-4 items-center">
                 <img src="/assets/images/icon-loading.svg" alt="loading" />{" "}
