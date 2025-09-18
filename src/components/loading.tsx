@@ -1,6 +1,8 @@
 import Header from "./header";
 import SearchBar from "./searchbar";
 import CardSkeleton from "./skeletons/card-skeleton";
+import DailyForecastSkeleton from "./skeletons/dailyForecastSkeleton";
+import HourlyForecastsSkeleton from "./skeletons/hourlyForecastSkeleton";
 
 const Loading = () => {
   return (
@@ -31,9 +33,21 @@ const Loading = () => {
               <p className="text-white text-[1.25rem] font-semibold">
                 Daily forecast
               </p>
+              <DailyForecastSkeleton />
             </div>
           </div>
-          <div className="h-[17.875rem] rounded-[1.25rem] bg-gray-800 animate-pulse"></div>
+          <div className="rounded-[1.25rem] bg-gray-800 px-6 py-6 ">
+            <div className="flex justify-between items-center">
+              <p className="text-[1.25rem] font-semibold text-white">
+                Hourly forecast
+              </p>
+              <button className="py-1 px-4 bg-[#3C3B5E] flex items-center gap-1 justify-between rounded-lg capitalize text-white cursor-pointer">
+                -
+                <img src="/assets/images/icon-dropdown.svg" />
+              </button>
+            </div>
+            <HourlyForecastsSkeleton />
+          </div>
         </section>
       </main>
     </>

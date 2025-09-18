@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Header from "../components/header";
 import SearchBar from "../components/searchbar";
@@ -15,7 +15,6 @@ import { useDebounce } from "../hooks/useDebounce";
 import Loading from "../components/loading";
 
 const Home = () => {
-  const [isLoading, setIsLoading] = useState(true);
   const { setLocation, latitude, longitude, searchResults, searchQuery } =
     useLocationStore((state) => state);
 
@@ -43,7 +42,7 @@ const Home = () => {
     enabled: latitude != null && longitude != null,
   });
 
-  if (isLoading) {
+  if (isPending) {
     return <Loading />;
   }
 
