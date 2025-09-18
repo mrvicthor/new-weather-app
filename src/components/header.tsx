@@ -1,7 +1,7 @@
 const Header = () => {
   return (
-    <header className="bg-[#02012C] py-4 md:py-6 lg:py-12 px-4 md:px-6">
-      <nav className="container mx-auto flex justify-between items-center">
+    <header className="bg-[#02012C] py-4 md:py-6 lg:py-12">
+      <nav className="container mx-auto flex justify-between items-center px-4 md:px-6">
         <button className="h-[2.6875rem]">
           <img
             src="/assets/images/logo.svg"

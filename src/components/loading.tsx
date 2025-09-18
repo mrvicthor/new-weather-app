@@ -12,8 +12,9 @@ const Loading = () => {
         <h1 className="text-center text-white text-[3.25rem] font-bold font-Bricolage">
           How’s the sky looking today?
         </h1>
-
-        <SearchBar />
+        <section className="relative flex flex-col items-center justify-center lg:mt-16 mt-12">
+          <SearchBar />
+        </section>
         <section className="grid lg:grid-cols-3 md:grid-rows-[43.3125rem] mt-8 lg:mt-12 gap-8">
           <div className="lg:col-span-2">
             <div className="h-[17.875rem] rounded-[1.25rem] bg-[#262540] animate-pulse flex items-center justify-center">
@@ -36,7 +37,7 @@ const Loading = () => {
               <DailyForecastSkeleton />
             </div>
           </div>
-          <div className="rounded-[1.25rem] bg-gray-800 px-6 py-6 ">
+          <div className="rounded-[1.25rem] bg-[#262540] px-6 py-6 ">
             <div className="flex justify-between items-center">
               <p className="text-[1.25rem] font-semibold text-white">
                 Hourly forecast
