@@ -12,7 +12,7 @@ const SearchBar = () => {
   const debounceValue = useDebounce(searchQuery);
 
   return (
-    <div className="relative md:h-[3.5rem] w-full lg:w-[41rem]  flex flex-col md:flex-row gap-4">
+    <div className="relative md:h-[3.5rem] w-full lg:w-[41rem] flex flex-col md:flex-row gap-4">
       <img
         src="/assets/images/icon-search.svg"
         alt="Search"

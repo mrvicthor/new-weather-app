@@ -119,7 +119,7 @@ const Home = () => {
         <h1 className="text-center text-white text-[3.25rem] font-bold font-Bricolage">
           How’s the sky looking today?
         </h1>
-        <section className="relative flex flex-col items-center lg:mt-16 mt-12 overflow-hidden">
+        <section className="relative flex flex-col items-center lg:mt-16 mt-12">
           <SearchBar />
           <div className="relative w-[41rem] gap-4">
             {debouncedValue && searchResults && searchResults.length > 0 && (

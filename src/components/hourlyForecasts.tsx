@@ -20,7 +20,7 @@ const HourlyForecasts = ({ data }: HourlyForecastProp) => {
         <motion.li
           variants={listItem}
           key={index}
-          className="flex text-white items-center justify-between px-3 py-[1.125rem] bg-[#302F4A] rounded-lg"
+          className="flex text-white items-center justify-between px-3 h-[3.75rem] bg-[#302F4A] rounded-lg"
         >
           <div className="flex gap-2 items-center">
             <img
