@@ -12,12 +12,12 @@ import Card from "../components/card";
 import CardWithSpace from "../components/cardWithSpace";
 import type { Forecast, HourlyForecast } from "../types";
 import DailyForecast from "../components/dailyForecast";
-import { mapWeatherCodeToDescription } from "../utils/mapWeatherCodeToDescription";
 import HourlyForecasts from "../components/hourlyForecasts";
 import ErrorPage from "../components/errorPage";
 import { useDebounce } from "../hooks/useDebounce";
 import Loading from "../components/loading";
 import { createPortal } from "react-dom";
+import Location from "../components/location";
 
 const Home = () => {
   const { setLocation, latitude, longitude, searchQuery, setSearchQuery } =
@@ -119,7 +119,7 @@ const Home = () => {
         <h1 className="text-center text-white text-[3.25rem] font-bold font-Bricolage">
           How’s the sky looking today?
         </h1>
-        <section className="relative flex flex-col items-center justify-center lg:mt-16 mt-12">
+        <section className="relative flex flex-col items-center lg:mt-16 mt-12 overflow-hidden">
           <SearchBar />
           <div className="relative w-[41rem] gap-4">
             {debouncedValue && searchResults && searchResults.length > 0 && (
@@ -155,28 +155,15 @@ const Home = () => {
         ) : (
           <section className="grid lg:grid-cols-3 md:grid-rows-[43.3125rem] mt-8 lg:mt-12 gap-8">
             <div className="lg:col-span-2">
-              <div className="bg-[url('/assets/images/bg-today-small.svg')] md:bg-[url('/assets/images/bg-today-large.svg')] h-[17.875rem] bg-cover bg-center bg-no-repeat rounded-[1.25rem] flex flex-col justify-center md:flex-row items-center px-6">
-                <div className="md:flex-1">
-                  <h2 className="font-sans text-[1.75rem] font-bold text-white">
-                    {data.location.address.city ?? data.location.address.state},{" "}
-                    {data.location.address.country}
-                  </h2>
-                  <p className="text-[1.125rem] font-medium opacity:80 text-white mt-3">
-                    {formattedDate}
-                  </p>
-                </div>
-                <div className="flex items-center">
-                  <img
-                    src={mapWeatherCodeToDescription(
-                      data.weather.current.weather_code
-                    )}
-                    className="h-[7.5rem] w-[7.5rem]"
-                  />
-                  <p className="text-white italic text-[6rem] font-bold">
-                    {Math.ceil(data.weather.current.temperature_2m)}&deg;
-                  </p>
-                </div>
-              </div>
+              <Location
+                temperature={data.weather.current.temperature_2m}
+                city={data.location.address.city}
+                state={data.location.address.state}
+                date={formattedDate}
+                country={data.location.address.country}
+                weatherCode={data.weather.current.weather_code}
+              />
+
               <div className="grid grid-cols-2 md:grid-cols-4 mt-5 lg:mt-8 gap-6">
                 <Card
                   title="feels like"
