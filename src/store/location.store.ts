@@ -49,6 +49,13 @@ export const createLocationStore = (
     setSelectedUnit: () =>
       set((state) => ({
         selectedUnit: state.selectedUnit === "Imperial" ? "Metric" : "Imperial",
+        selectedPrecipitation:
+          state.selectedPrecipitation === "millimeters"
+            ? "inches"
+            : "millimeters",
+        selectedTemperature:
+          state.selectedTemperature === "Celsius" ? "Fahrenheit" : "Celsius",
+        selectedWindSpeed: state.selectedWindSpeed === "km/h" ? "mph" : "km/h",
       })),
     setSelectedTemperature: (temperature: Temperature) =>
       set(() => ({ selectedTemperature: temperature })),

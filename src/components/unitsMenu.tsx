@@ -76,6 +76,7 @@ const UnitsMenu = ({ menuRef }: UnitsMenuProps) => {
         {windOptions.map((item) => (
           <button
             key={item.label}
+            onClick={() => setSelectedWindSpeed(item.value as "km/h" | "mph")}
             role="menuitem"
             className={`text-white h-[2.4375rem] flex items-center w-full hover:bg-[#302F4A] cursor-pointer px-2 rounded-lg font-medium justify-between
             ${selectedWindSpeed === item.value && "bg-[#302F4A]"}`}
@@ -98,6 +99,9 @@ const UnitsMenu = ({ menuRef }: UnitsMenuProps) => {
         {precipitationOptions.map((item) => (
           <button
             key={item.label}
+            onClick={() =>
+              setSelectedPrecipitation(item.value as "millimeters" | "inches")
+            }
             role="menuitem"
             className={`text-white h-[2.4375rem] flex items-center justify-between w-full hover:bg-[#302F4A] cursor-pointer px-2 rounded-lg font-medium ${
               selectedPrecipitation === item.value && "bg-[#302F4A]"
