@@ -1,16 +1,26 @@
 import { createStore } from "zustand";
 
+export type Temperature = "Celsius" | "Fahrenheit";
+
 export type LocationState = {
   latitude: number | null;
   longitude: number | null;
   searchQuery: string;
   isUnitsMounted: boolean;
+  selectedUnit: "Metric" | "Imperial";
+  selectedTemperature: Temperature;
+  selectedWindSpeed: "km/h" | "mph";
+  selectedPrecipitation: "millimeters" | "inches";
 };
 
 export type LocationActions = {
   setLocation: (latitude: number, longitude: number) => void;
   setSearchQuery: (query: string) => void;
   toggleUnitsMounted: () => void;
+  setSelectedUnit: () => void;
+  setSelectedTemperature: (value: Temperature) => void;
+  setSelectedWindSpeed: (value: "km/h" | "mph") => void;
+  setSelectedPrecipitation: (value: "millimeters" | "inches") => void;
 };
 
 export type LocationStore = LocationState & LocationActions;
@@ -20,6 +30,10 @@ export const defaultInitialState: LocationState = {
   longitude: null,
   searchQuery: "",
   isUnitsMounted: false,
+  selectedUnit: "Metric",
+  selectedTemperature: "Celsius",
+  selectedWindSpeed: "km/h",
+  selectedPrecipitation: "millimeters",
 };
 
 export const createLocationStore = (
@@ -32,5 +46,15 @@ export const createLocationStore = (
     setSearchQuery: (input: string) => set(() => ({ searchQuery: input })),
     toggleUnitsMounted: () =>
       set((state) => ({ isUnitsMounted: !state.isUnitsMounted })),
+    setSelectedUnit: () =>
+      set((state) => ({
+        selectedUnit: state.selectedUnit === "Imperial" ? "Metric" : "Imperial",
+      })),
+    setSelectedTemperature: (temperature: Temperature) =>
+      set(() => ({ selectedTemperature: temperature })),
+    setSelectedPrecipitation: (value: "millimeters" | "inches") =>
+      set(() => ({ selectedPrecipitation: value })),
+    setSelectedWindSpeed: (value: "km/h" | "mph") =>
+      set(() => ({ selectedWindSpeed: value })),
   }));
 };

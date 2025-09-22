@@ -15,12 +15,12 @@ export const listItem = {
 
 export const temperatureOptions = [
   {
-    label: "celsius",
-    value: "celsius",
+    label: "Celsius",
+    value: "Celsius",
   },
   {
-    label: "fahrenheit",
-    value: "fahrenheit",
+    label: "Fahrenheit",
+    value: "Fahrenheit",
   },
 ];
 

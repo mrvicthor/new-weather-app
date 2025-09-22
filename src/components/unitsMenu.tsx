@@ -1,3 +1,5 @@
+import { useLocationStore } from "../hooks/useLocationStore";
+import type { Temperature } from "../store/location.store";
 import {
   precipitationOptions,
   temperatureOptions,
@@ -9,6 +11,18 @@ type UnitsMenuProps = {
 };
 
 const UnitsMenu = ({ menuRef }: UnitsMenuProps) => {
+  const {
+    setSelectedUnit,
+    selectedUnit,
+    selectedTemperature,
+    setSelectedTemperature,
+    selectedPrecipitation,
+    setSelectedPrecipitation,
+    selectedWindSpeed,
+    setSelectedWindSpeed,
+  } = useLocationStore((state) => state);
+  console.log({ selectedTemperature, selectedUnit });
+
   return (
     <div
       ref={menuRef}
@@ -19,9 +33,15 @@ const UnitsMenu = ({ menuRef }: UnitsMenuProps) => {
     >
       <button
         role="menuitem"
+        onClick={setSelectedUnit}
         className="text-white h-[2.4375rem] flex items-center w-full hover:bg-[#302F4A] cursor-pointer px-2 rounded-lg font-medium"
       >
-        Switch to Imperial
+        Switch to{" "}
+        {selectedUnit === "Imperial"
+          ? "Metric"
+          : selectedUnit === "Metric"
+          ? "Imperial"
+          : "Metric"}
       </button>
       <article aria-labelledby="temp-label" className="flex flex-col gap-2">
         <p id="temp-label" className="text-[#ACACB7] pl-2 capitalize">
@@ -30,10 +50,21 @@ const UnitsMenu = ({ menuRef }: UnitsMenuProps) => {
         {temperatureOptions.map((item) => (
           <button
             key={item.label}
+            onClick={() => setSelectedTemperature(item.value as Temperature)}
             role="menuitem"
-            className="text-white h-[2.4375rem] flex items-center w-full hover:bg-[#302F4A] cursor-pointer px-2 rounded-lg font-medium capitalize"
+            className={`text-white h-[2.4375rem] flex items-center justify-between w-full hover:bg-[#302F4A] cursor-pointer px-2 rounded-lg font-medium capitalize ${
+              selectedTemperature === item.value && "bg-[#302F4A]"
+            }`}
           >
             {item.label}
+            {item.label.toLowerCase() === "celsius"
+              ? " (°C)"
+              : item.label.toLowerCase() === "fahrenheit"
+              ? " (°F)"
+              : ""}{" "}
+            {selectedTemperature === item.value && (
+              <img src="/assets/images/icon-checkmark.svg" alt="" />
+            )}
           </button>
         ))}
       </article>
@@ -46,9 +77,13 @@ const UnitsMenu = ({ menuRef }: UnitsMenuProps) => {
           <button
             key={item.label}
             role="menuitem"
-            className="text-white h-[2.4375rem] flex items-center w-full hover:bg-[#302F4A] cursor-pointer px-2 rounded-lg font-medium capitalize"
+            className={`text-white h-[2.4375rem] flex items-center w-full hover:bg-[#302F4A] cursor-pointer px-2 rounded-lg font-medium justify-between
+            ${selectedWindSpeed === item.value && "bg-[#302F4A]"}`}
           >
             {item.label}
+            {selectedWindSpeed === item.value && (
+              <img src="/assets/images/icon-checkmark.svg" alt="" />
+            )}
           </button>
         ))}
       </article>
@@ -64,9 +99,19 @@ const UnitsMenu = ({ menuRef }: UnitsMenuProps) => {
           <button
             key={item.label}
             role="menuitem"
-            className="text-white h-[2.4375rem] flex items-center w-full hover:bg-[#302F4A] cursor-pointer px-2 rounded-lg font-medium capitalize"
+            className={`text-white h-[2.4375rem] flex items-center justify-between w-full hover:bg-[#302F4A] cursor-pointer px-2 rounded-lg font-medium ${
+              selectedPrecipitation === item.value && "bg-[#302F4A]"
+            }`}
           >
             {item.label}
+            {item.label.toLowerCase() === "millimeters"
+              ? " (mm)"
+              : item.label.toLowerCase() === "inches"
+              ? " (in)"
+              : ""}
+            {selectedPrecipitation === item.value && (
+              <img src="/assets/images/icon-checkmark.svg" alt="" />
+            )}
           </button>
         ))}
       </article>
