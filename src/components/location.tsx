@@ -1,3 +1,5 @@
+import { useLocationStore } from "../hooks/useLocationStore";
+import { formatTemperatureToFahrenheit } from "../utils/formatTemperature";
 import { mapWeatherCodeToDescription } from "../utils/mapWeatherCodeToDescription";
 
 type LocationProps = {
@@ -17,6 +19,12 @@ const Location = ({
   weatherCode,
   temperature,
 }: LocationProps) => {
+  const { selectedTemperature } = useLocationStore((state) => state);
+  const formattedTemperature = formatTemperatureToFahrenheit(temperature);
+  const temperatureToDisplay =
+    selectedTemperature === "Fahrenheit"
+      ? formattedTemperature
+      : Math.ceil(temperature);
   return (
     <div className="bg-[url('/assets/images/bg-today-small.svg')] md:bg-[url('/assets/images/bg-today-large.svg')] h-[17.875rem] bg-cover bg-center bg-no-repeat rounded-[1.25rem] flex flex-col justify-center md:flex-row items-center px-6">
       <div className="md:flex-1">
@@ -33,7 +41,7 @@ const Location = ({
           className="h-[7.5rem] w-[7.5rem]"
         />
         <p className="text-white italic text-[6rem] font-bold">
-          {Math.ceil(temperature)}&deg;
+          {temperatureToDisplay}&deg;
         </p>
       </div>
     </div>

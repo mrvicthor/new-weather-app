@@ -18,10 +18,17 @@ import { useDebounce } from "../hooks/useDebounce";
 import Loading from "../components/loading";
 import { createPortal } from "react-dom";
 import Location from "../components/location";
+import { formatTemperatureToFahrenheit } from "../utils/formatTemperature";
 
 const Home = () => {
-  const { setLocation, latitude, longitude, searchQuery, setSearchQuery } =
-    useLocationStore((state) => state);
+  const {
+    setLocation,
+    latitude,
+    longitude,
+    searchQuery,
+    setSearchQuery,
+    selectedTemperature,
+  } = useLocationStore((state) => state);
 
   const debouncedValue = useDebounce(searchQuery);
   useEffect(() => {
@@ -112,6 +119,16 @@ const Home = () => {
     hourlyForecast.push(forecast);
   }
 
+  const formattedTemperature = formatTemperatureToFahrenheit(
+    data.weather.current.apparent_temperature
+  );
+  const temperatureToDisplay =
+    selectedTemperature === "Fahrenheit"
+      ? formattedTemperature
+      : Math.ceil(data.weather.current.apparent_temperature);
+
+  console.log({ data });
+
   return (
     <>
       <Header />
@@ -167,8 +184,8 @@ const Home = () => {
               <div className="grid grid-cols-2 md:grid-cols-4 mt-5 lg:mt-8 gap-6">
                 <Card
                   title="feels like"
-                  value={Math.ceil(data.weather.current.apparent_temperature)}
-                  unit={data.weather.current_units.temperature_2m}
+                  value={temperatureToDisplay}
+                  unit="&deg;"
                 />
                 <Card
                   title="humidity"

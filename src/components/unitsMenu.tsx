@@ -21,7 +21,6 @@ const UnitsMenu = ({ menuRef }: UnitsMenuProps) => {
     selectedWindSpeed,
     setSelectedWindSpeed,
   } = useLocationStore((state) => state);
-  console.log({ selectedTemperature, selectedUnit });
 
   return (
     <div
