@@ -4,11 +4,13 @@ export type LocationState = {
   latitude: number | null;
   longitude: number | null;
   searchQuery: string;
+  isUnitsMounted: boolean;
 };
 
 export type LocationActions = {
   setLocation: (latitude: number, longitude: number) => void;
   setSearchQuery: (query: string) => void;
+  toggleUnitsMounted: () => void;
 };
 
 export type LocationStore = LocationState & LocationActions;
@@ -17,6 +19,7 @@ export const defaultInitialState: LocationState = {
   latitude: null,
   longitude: null,
   searchQuery: "",
+  isUnitsMounted: false,
 };
 
 export const createLocationStore = (
@@ -27,5 +30,7 @@ export const createLocationStore = (
     setLocation: (latitude: number, longitude: number) =>
       set(() => ({ latitude, longitude })),
     setSearchQuery: (input: string) => set(() => ({ searchQuery: input })),
+    toggleUnitsMounted: () =>
+      set((state) => ({ isUnitsMounted: !state.isUnitsMounted })),
   }));
 };
