@@ -39,8 +39,8 @@ Users should be able to:
 
 ### Links
 
-- Solution URL: [[Add solution URL here](https://github.com/mrvicthor/new-weather-app)]
-- Live Site URL: [[Add live site URL here](https://new-weather-app-eight.vercel.app/)]
+- Solution URL: [https://github.com/mrvicthor/new-weather-app]
+- Live Site URL: [https://new-weather-app-eight.vercel.app/]
 
 ## My process
 
