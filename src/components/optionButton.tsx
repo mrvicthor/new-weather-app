@@ -20,7 +20,7 @@ const OptionButton = ({
     onClick={onClick}
     role="menuitem"
     className={classNames(
-      "text-white h-[2.4375rem] flex items-center justify-between w-full hover:bg-[#302F4A] cursor-pointer px-2 rounded-lg font-medium capitalize",
+      "text-white h-[2.4375rem] flex items-center justify-between w-full hover:bg-[#302F4A] cursor-pointer px-2 rounded-lg font-medium",
       selected && "bg-[#302F4A]"
     )}
   >

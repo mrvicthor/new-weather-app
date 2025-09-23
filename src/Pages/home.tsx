@@ -16,6 +16,7 @@ import { useGeolocation } from "../hooks/useGeolocation";
 import { getForecasts } from "../utils/getForecasts";
 import { useLocationSearch } from "../hooks/useLocationSearch";
 import { useWeather } from "../hooks/useWeather";
+import { convertMillimetersToInches } from "../utils/convertMillimetersToInches";
 
 const Home = ({
   useLocationStoreHook = useLocationStore,
@@ -32,6 +33,7 @@ const Home = ({
     setSearchQuery,
     selectedTemperature,
     selectedWindSpeed,
+    selectedPrecipitation,
   } = useLocationStoreHook((state) => state);
 
   const debouncedValue = useDebounceHook(searchQuery);
@@ -132,8 +134,11 @@ const Home = ({
                 />
                 <CardWithSpace
                   title="precipitation"
-                  value={data.weather.current.precipitation}
-                  unit={data.weather.current_units.precipitation}
+                  value={convertMillimetersToInches(
+                    data.weather.current.precipitation,
+                    data.weather.current_units.precipitation
+                  )}
+                  unit={selectedPrecipitation === "millimeters" ? "mm" : "in"}
                 />
               </div>
               <div className="mt-8 lg:mt-12">
