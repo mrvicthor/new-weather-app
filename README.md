@@ -36,3 +36,21 @@ Users should be able to:
 ### Screenshot
 
 ![](./screenshot.png)
+
+### Links
+
+- Solution URL: [[Add solution URL here](https://github.com/mrvicthor/new-weather-app)]
+- Live Site URL: [[Add live site URL here](https://new-weather-app-eight.vercel.app/)]
+
+## My process
+
+### Built with
+
+- Semantic HTML5 markup
+- CSS custom properties
+- Flexbox
+- CSS Grid
+- Mobile-first workflow
+- [React](https://reactjs.org/) - JS library
+- [Motion](https://motion.dev/docs/react) - Motion for React
+- [TailwindCSS](https://tailwindcss.com/) - For styles
