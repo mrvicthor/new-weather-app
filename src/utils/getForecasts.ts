@@ -1,6 +1,6 @@
 import type { Forecast, HourlyForecast, WeatherApiResponse } from "../types";
 
-export function getForecasts(data: WeatherApiResponse) {
+export function getForecasts(data: WeatherApiResponse, selectedDay?: string) {
   const today = new Date(data?.weather.current.time);
   const options: Intl.DateTimeFormatOptions = {
     weekday: "long",
@@ -10,6 +10,13 @@ export function getForecasts(data: WeatherApiResponse) {
   };
   const formattedDate = today.toLocaleDateString("en-US", options);
   const formatDay = today.toLocaleDateString("en-US", { weekday: "long" });
+
+  const dayToSelectIndex = data.weather.daily.time.findIndex((date) => {
+    const day = new Date(date).toLocaleDateString("en-US", { weekday: "long" });
+    return day === selectedDay || (!selectedDay && day === formatDay);
+  });
+
+  console.log(data.weather.daily.time[dayToSelectIndex]);
 
   const hourlyForecast: HourlyForecast[] = [];
   const dailyForecast: Forecast[] = [];

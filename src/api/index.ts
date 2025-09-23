@@ -41,7 +41,7 @@ export const fetchLocationWeather = async (
 ): Promise<SearchResponse> => {
   try {
     const response = await fetch(
-      `https://geocoding-api.open-meteo.com/v1/search?name=${location}&count=5`
+      `https://geocoding-api.open-meteo.com/v1/search?name=${location}&count=4`
     );
 
     if (!response.ok) {

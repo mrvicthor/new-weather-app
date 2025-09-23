@@ -69,9 +69,9 @@ const Home = ({
   }
 
   const { formattedDate, hourlyForecast, dailyForecast, formatDay, daysList } =
-    getForecastsFn(data);
+    getForecastsFn(data, selectedDay);
 
-  console.log(daysList);
+  console.log(data);
 
   return (
     <>
