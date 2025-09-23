@@ -30,3 +30,40 @@ export type SearchResult = {
 export type SearchResponse = {
   results: SearchResult[];
 };
+
+// Types for weather API response
+export type WeatherApiResponse = {
+  location: {
+    address: {
+      city: string;
+      state: string;
+      country: string;
+    };
+  };
+  weather: {
+    current: {
+      time: string;
+      temperature_2m: number;
+      apparent_temperature: number;
+      relative_humidity_2m: number;
+      wind_speed_10m: number;
+      precipitation: number;
+      weather_code: number;
+    };
+    current_units: {
+      relative_humidity_2m: string;
+      precipitation: string;
+    };
+    daily: {
+      time: string[];
+      temperature_2m_max: number[];
+      temperature_2m_min: number[];
+      weather_code: number[];
+    };
+    hourly: {
+      weather_code: number[];
+      time: string[];
+      temperature_2m: number[];
+    };
+  };
+};

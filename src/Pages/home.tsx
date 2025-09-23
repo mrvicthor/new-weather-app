@@ -1,27 +1,29 @@
-import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
 import Header from "../components/header";
 import SearchBar from "../components/searchbar";
 import { useLocationStore } from "../hooks/useLocationStore";
-import {
-  fetchLocation,
-  fetchLocationWeather,
-  fetchWeatherDetails,
-} from "../api";
 import Card from "../components/card";
 import CardWithSpace from "../components/cardWithSpace";
-import type { Forecast, HourlyForecast } from "../types";
 import DailyForecast from "../components/dailyForecast";
 import HourlyForecasts from "../components/hourlyForecasts";
-import ErrorPage from "../components/errorPage";
-import { useDebounce } from "../hooks/useDebounce";
-import Loading from "../components/loading";
-import { createPortal } from "react-dom";
 import Location from "../components/location";
+import ErrorPage from "../components/errorPage";
+import Loading from "../components/loading";
 import { getDisplayTemperature } from "../utils/formatTemperature";
 import { convertSpeed } from "../utils/convertSpeed";
+import { useDebounce } from "../hooks/useDebounce";
+import { createPortal } from "react-dom";
+import { useGeolocation } from "../hooks/useGeolocation";
+import { getForecasts } from "../utils/getForecasts";
+import { useLocationSearch } from "../hooks/useLocationSearch";
+import { useWeather } from "../hooks/useWeather";
 
-const Home = () => {
+const Home = ({
+  useLocationStoreHook = useLocationStore,
+  useDebounceHook = useDebounce,
+  createPortalFn = createPortal,
+  getForecastsFn = getForecasts,
+  useGeolocationHook = useGeolocation,
+} = {}) => {
   const {
     setLocation,
     latitude,
@@ -30,48 +32,21 @@ const Home = () => {
     setSearchQuery,
     selectedTemperature,
     selectedWindSpeed,
-  } = useLocationStore((state) => state);
+  } = useLocationStoreHook((state) => state);
 
-  const debouncedValue = useDebounce(searchQuery);
-  useEffect(() => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const { latitude, longitude } = position.coords;
-        setLocation(latitude, longitude);
-      });
-    }
-  }, [setLocation]);
+  const debouncedValue = useDebounceHook(searchQuery);
+  useGeolocationHook(setLocation);
 
   const {
     data: searchResults,
     error,
     isLoading,
-  } = useQuery({
-    queryKey: ["search", debouncedValue],
-    queryFn: async () => {
-      if (!debouncedValue) return [];
+  } = useLocationSearch(debouncedValue);
 
-      const data = await fetchLocationWeather(debouncedValue);
-      if (!data || !data.results) return [];
-
-      return data.results;
-    },
-    enabled: debouncedValue.length > 0,
-  });
-
-  const { data, isError, isPending } = useQuery({
-    queryKey: ["location", latitude, longitude],
-    queryFn: async () => {
-      if (latitude == null || longitude == null)
-        return Promise.reject("No location");
-      const [location, weather] = await Promise.all([
-        fetchLocation(Number(latitude), Number(longitude)),
-        fetchWeatherDetails(Number(latitude), Number(longitude)),
-      ]);
-      return { location, weather };
-    },
-    enabled: latitude != null && longitude != null,
-  });
+  const { data, isError, isPending } = useWeather(
+    Number(latitude),
+    Number(longitude)
+  );
 
   if (isPending) {
     return <Loading />;
@@ -81,47 +56,8 @@ const Home = () => {
     return <ErrorPage />;
   }
 
-  const today = new Date(data?.weather.current.time);
-
-  const options: Intl.DateTimeFormatOptions = {
-    weekday: "long",
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  };
-
-  const formattedDate = today.toLocaleDateString("en-US", options);
-  const formatDay = today.toLocaleDateString("en-US", {
-    weekday: "long",
-  });
-
-  const hourlyForecast: HourlyForecast[] = [];
-  const dailyForecast: Forecast[] = [];
-  for (let i = 0; i < 7; i++) {
-    const forecast: Forecast = {
-      day: new Date(data.weather.daily.time[i]).toLocaleDateString("en-US", {
-        weekday: "short",
-      }),
-      maxTemp: Math.ceil(data.weather.daily.temperature_2m_max[i]),
-      minTemp: Math.ceil(data.weather.daily.temperature_2m_min[i]),
-      weatherCode: data.weather.daily.weather_code[i],
-    };
-    dailyForecast.push(forecast);
-  }
-
-  for (let i = 0; i < 24; i++) {
-    const forecast: HourlyForecast = {
-      weatherCode: data.weather.hourly.weather_code[i],
-      time: new Date(data.weather.hourly.time[i]).toLocaleDateString("en-US", {
-        hour: "2-digit",
-      }),
-      temperature: Math.ceil(data.weather.hourly.temperature_2m[i]),
-    };
-
-    hourlyForecast.push(forecast);
-  }
-
-  console.log({ data });
+  const { formattedDate, formatDay, hourlyForecast, dailyForecast } =
+    getForecastsFn(data);
 
   return (
     <>
@@ -141,7 +77,6 @@ const Home = () => {
                     Search in progress
                   </li>
                 )}
-
                 {searchResults?.map((city) => (
                   <li
                     key={city.id}
@@ -158,7 +93,6 @@ const Home = () => {
             )}
           </div>
         </section>
-
         {searchResults && searchResults.length === 0 ? (
           <p className="text-white mt-12 text-center font-bold text-[1.75rem]">
             No search results found
@@ -174,7 +108,6 @@ const Home = () => {
                 country={data.location.address.country}
                 weatherCode={data.weather.current.weather_code}
               />
-
               <div className="grid grid-cols-2 md:grid-cols-4 mt-5 lg:mt-8 gap-6">
                 <Card
                   title="feels like"
@@ -225,7 +158,7 @@ const Home = () => {
           </section>
         )}
       </main>
-      {error && createPortal(<ErrorPage />, document.getElementById("root")!)}
+      {error && createPortalFn(<ErrorPage />, document.getElementById("root")!)}
     </>
   );
 };
