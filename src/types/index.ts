@@ -5,7 +5,13 @@ export interface Forecast {
   weatherCode: number;
 }
 
+export type Day = {
+  day: string;
+  date: Date;
+};
+
 export interface HourlyForecast {
+  date: Date;
   weatherCode: number;
   time: string;
   temperature: number;

@@ -68,10 +68,11 @@ const Home = ({
     return <ErrorPage />;
   }
 
-  const { formattedDate, hourlyForecast, dailyForecast, formatDay, daysList } =
+  const { formattedDate, hourlyForecast, dailyForecast, daysList } =
     getForecastsFn(data, selectedDay);
-
-  console.log(data);
+  const formatDay = selectedDay.toLocaleDateString("en-US", {
+    weekday: "long",
+  });
 
   return (
     <>
@@ -174,7 +175,7 @@ const Home = ({
                   id="days-menu-button"
                   className="py-2 px-4 bg-[#3C3B5E] flex items-center gap-1 justify-between rounded-lg capitalize text-white cursor-pointer"
                 >
-                  {selectedDay || formatDay}
+                  {formatDay}
                   <img src="/assets/images/icon-dropdown.svg" alt="" />
                 </button>
                 {isDayslistMounted && (

@@ -19,7 +19,6 @@ const DailyForecast = ({ data }: DailyForecastProps) => {
         className="grid grid-cols-3 md:grid-cols-7 gap-4"
       >
         {data.map(({ maxTemp, minTemp, day, weatherCode }, index) => {
-          console.log(day);
           return (
             <motion.li
               variants={listItem}
