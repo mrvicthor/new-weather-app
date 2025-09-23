@@ -1,7 +1,7 @@
 import { useLocationStore } from "../hooks/useLocationStore";
 import type { Forecast } from "../types";
 import { list, listItem } from "../utils";
-import { formatTemperatureToFahrenheit } from "../utils/formatTemperature";
+import { getDisplayTemperature } from "../utils/formatTemperature";
 import { mapWeatherCodeToDescription } from "../utils/mapWeatherCodeToDescription";
 import { motion } from "motion/react";
 
@@ -18,40 +18,23 @@ const DailyForecast = ({ data }: DailyForecastProps) => {
         animate="visible"
         className="grid grid-cols-3 md:grid-cols-7 gap-4"
       >
-        {data.map((forecast) => {
-          const formattedMaxTemperature = formatTemperatureToFahrenheit(
-            forecast.maxTemp
-          );
-
-          const formattedMinTemperature = formatTemperatureToFahrenheit(
-            forecast.minTemp
-          );
-
-          const maxTemperatureToDisplay =
-            selectedTemperature === "Fahrenheit"
-              ? formattedMaxTemperature
-              : Math.ceil(forecast.maxTemp);
-
-          const minTemperatureToDisplay =
-            selectedTemperature === "Fahrenheit"
-              ? formattedMinTemperature
-              : Math.ceil(forecast.minTemp);
+        {data.map(({ maxTemp, minTemp, day, weatherCode }, index) => {
           return (
             <motion.li
               variants={listItem}
-              key={forecast.day}
+              key={day || index}
               className="p-4 bg-[#3C3B5E] rounded-xl"
             >
               <span className="text-center block text-lg text-white font-medium">
-                {forecast.day}
+                {day}
               </span>
-              <img src={mapWeatherCodeToDescription(forecast.weatherCode)} />
+              <img src={mapWeatherCodeToDescription(weatherCode)} />
               <div className="flex justify-between items-center">
                 <span className="text-white font-medium">
-                  {maxTemperatureToDisplay}&deg;
+                  {getDisplayTemperature(selectedTemperature, maxTemp)}&deg;
                 </span>
                 <span className="text-white font-medium">
-                  {minTemperatureToDisplay}&deg;
+                  {getDisplayTemperature(selectedTemperature, minTemp)}&deg;
                 </span>
               </div>
             </motion.li>

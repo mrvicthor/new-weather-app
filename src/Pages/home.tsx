@@ -18,7 +18,8 @@ import { useDebounce } from "../hooks/useDebounce";
 import Loading from "../components/loading";
 import { createPortal } from "react-dom";
 import Location from "../components/location";
-import { formatTemperatureToFahrenheit } from "../utils/formatTemperature";
+import { getDisplayTemperature } from "../utils/formatTemperature";
+import { convertSpeed } from "../utils/convertSpeed";
 
 const Home = () => {
   const {
@@ -28,6 +29,7 @@ const Home = () => {
     searchQuery,
     setSearchQuery,
     selectedTemperature,
+    selectedWindSpeed,
   } = useLocationStore((state) => state);
 
   const debouncedValue = useDebounce(searchQuery);
@@ -119,14 +121,6 @@ const Home = () => {
     hourlyForecast.push(forecast);
   }
 
-  const formattedTemperature = formatTemperatureToFahrenheit(
-    data.weather.current.apparent_temperature
-  );
-  const temperatureToDisplay =
-    selectedTemperature === "Fahrenheit"
-      ? formattedTemperature
-      : Math.ceil(data.weather.current.apparent_temperature);
-
   console.log({ data });
 
   return (
@@ -184,7 +178,10 @@ const Home = () => {
               <div className="grid grid-cols-2 md:grid-cols-4 mt-5 lg:mt-8 gap-6">
                 <Card
                   title="feels like"
-                  value={temperatureToDisplay}
+                  value={getDisplayTemperature(
+                    selectedTemperature,
+                    data.weather.current.apparent_temperature
+                  )}
                   unit="&deg;"
                 />
                 <Card
@@ -194,8 +191,11 @@ const Home = () => {
                 />
                 <CardWithSpace
                   title="wind"
-                  value={data.weather.current.wind_speed_10m}
-                  unit={data.weather.current_units.wind_speed_10m}
+                  value={convertSpeed(
+                    data.weather.current.wind_speed_10m,
+                    selectedWindSpeed
+                  )}
+                  unit={selectedWindSpeed === "km/h" ? "km/h" : "mph"}
                 />
                 <CardWithSpace
                   title="precipitation"
