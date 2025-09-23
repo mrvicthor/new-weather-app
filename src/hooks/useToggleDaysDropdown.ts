@@ -1,6 +1,9 @@
 import React, { useRef, useEffect } from "react";
 
-export const useToggleDaysDropdown = (isOpen: boolean) => {
+export const useToggleDaysDropdown = (
+  isOpen: boolean,
+  toggleDaysList: () => void
+) => {
   const menuRef = useRef<HTMLUListElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const itemsRef = useRef<(HTMLButtonElement | null)[]>([]);
@@ -9,6 +12,26 @@ export const useToggleDaysDropdown = (isOpen: boolean) => {
     if (isOpen && itemsRef.current[0]) {
       itemsRef.current[0].focus();
     }
+  }, [isOpen]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        isOpen &&
+        menuRef.current &&
+        !menuRef.current.contains(event.target as Node) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target as Node)
+      ) {
+        toggleDaysList();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, [isOpen]);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLUListElement>) => {

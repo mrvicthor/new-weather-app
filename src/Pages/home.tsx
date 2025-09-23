@@ -50,8 +50,10 @@ const Home = ({
     isLoading,
   } = useLocationSearch(debouncedValue);
 
-  const { menuRef, buttonRef, itemsRef, handleKeyDown } =
-    useToggleDaysDropdown(isDayslistMounted);
+  const { menuRef, buttonRef, itemsRef, handleKeyDown } = useToggleDaysDropdown(
+    isDayslistMounted,
+    toggleDaysList
+  );
 
   const { data, isError, isPending } = useWeather(
     Number(latitude),
