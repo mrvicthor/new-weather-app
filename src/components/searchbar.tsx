@@ -26,7 +26,7 @@ const SearchBar = () => {
       />
       <button
         disabled={!debounceValue}
-        className="bg-[#4658D9] w-full md:w-[7.125rem] h-14  rounded-xl text-white font-medium font-sans text-[1.25rem] capitalize cursor-pointer"
+        className="bg-[#4658D9] w-full md:w-[7.125rem] h-14  rounded-xl text-white font-medium font-sans text-[1.25rem] capitalize cursor-pointer hover:bg-[#2B1B9C]"
       >
         search
       </button>

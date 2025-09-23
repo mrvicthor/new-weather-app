@@ -5,6 +5,7 @@ import {
   temperatureOptions,
   windOptions,
 } from "../utils";
+import OptionButton from "./optionButton";
 
 type UnitsMenuProps = {
   menuRef: React.RefObject<HTMLDivElement | null>;
@@ -35,36 +36,26 @@ const UnitsMenu = ({ menuRef }: UnitsMenuProps) => {
         onClick={setSelectedUnit}
         className="text-white h-[2.4375rem] flex items-center w-full hover:bg-[#302F4A] cursor-pointer px-2 rounded-lg font-medium"
       >
-        Switch to{" "}
-        {selectedUnit === "Imperial"
-          ? "Metric"
-          : selectedUnit === "Metric"
-          ? "Imperial"
-          : "Metric"}
+        Switch to {selectedUnit === "Imperial" ? "Metric" : "Imperial"}
       </button>
       <article aria-labelledby="temp-label" className="flex flex-col gap-2">
         <p id="temp-label" className="text-[#ACACB7] pl-2 capitalize">
           temperature
         </p>
         {temperatureOptions.map((item) => (
-          <button
+          <OptionButton
             key={item.label}
+            label={item.label}
+            selected={selectedTemperature === item.value}
             onClick={() => setSelectedTemperature(item.value as Temperature)}
-            role="menuitem"
-            className={`text-white h-[2.4375rem] flex items-center justify-between w-full hover:bg-[#302F4A] cursor-pointer px-2 rounded-lg font-medium capitalize ${
-              selectedTemperature === item.value && "bg-[#302F4A]"
-            }`}
-          >
-            {item.label}
-            {item.label.toLowerCase() === "celsius"
-              ? " (°C)"
-              : item.label.toLowerCase() === "fahrenheit"
-              ? " (°F)"
-              : ""}{" "}
-            {selectedTemperature === item.value && (
-              <img src="/assets/images/icon-checkmark.svg" alt="" />
-            )}
-          </button>
+            unit={
+              item.label.toLowerCase() === "celsius"
+                ? "°C"
+                : item.label.toLowerCase() === "fahrenheit"
+                ? "°F"
+                : undefined
+            }
+          />
         ))}
       </article>
       <hr className="text-[#ACACB7] my-1" />
@@ -73,18 +64,12 @@ const UnitsMenu = ({ menuRef }: UnitsMenuProps) => {
           wind speed
         </p>
         {windOptions.map((item) => (
-          <button
+          <OptionButton
             key={item.label}
+            label={item.label}
+            selected={selectedWindSpeed === item.value}
             onClick={() => setSelectedWindSpeed(item.value as "km/h" | "mph")}
-            role="menuitem"
-            className={`text-white h-[2.4375rem] flex items-center w-full hover:bg-[#302F4A] cursor-pointer px-2 rounded-lg font-medium justify-between
-            ${selectedWindSpeed === item.value && "bg-[#302F4A]"}`}
-          >
-            {item.label}
-            {selectedWindSpeed === item.value && (
-              <img src="/assets/images/icon-checkmark.svg" alt="" />
-            )}
-          </button>
+          />
         ))}
       </article>
       <hr className="text-[#ACACB7] my-1" />
@@ -96,26 +81,21 @@ const UnitsMenu = ({ menuRef }: UnitsMenuProps) => {
           precipitation
         </p>
         {precipitationOptions.map((item) => (
-          <button
+          <OptionButton
             key={item.label}
+            label={item.label}
+            selected={selectedPrecipitation === item.value}
             onClick={() =>
               setSelectedPrecipitation(item.value as "millimeters" | "inches")
             }
-            role="menuitem"
-            className={`text-white h-[2.4375rem] flex items-center justify-between w-full hover:bg-[#302F4A] cursor-pointer px-2 rounded-lg font-medium ${
-              selectedPrecipitation === item.value && "bg-[#302F4A]"
-            }`}
-          >
-            {item.label}
-            {item.label.toLowerCase() === "millimeters"
-              ? " (mm)"
-              : item.label.toLowerCase() === "inches"
-              ? " (in)"
-              : ""}
-            {selectedPrecipitation === item.value && (
-              <img src="/assets/images/icon-checkmark.svg" alt="" />
-            )}
-          </button>
+            unit={
+              item.label.toLowerCase() === "millimeters"
+                ? "mm"
+                : item.label.toLowerCase() === "inches"
+                ? "in"
+                : undefined
+            }
+          />
         ))}
       </article>
     </div>
