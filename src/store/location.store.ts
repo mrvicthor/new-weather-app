@@ -11,6 +11,8 @@ export type LocationState = {
   selectedTemperature: Temperature;
   selectedWindSpeed: "km/h" | "mph";
   selectedPrecipitation: "millimeters" | "inches";
+  isDayslistMounted: boolean;
+  selectedDay: string | undefined;
 };
 
 export type LocationActions = {
@@ -21,6 +23,8 @@ export type LocationActions = {
   setSelectedTemperature: (value: Temperature) => void;
   setSelectedWindSpeed: (value: "km/h" | "mph") => void;
   setSelectedPrecipitation: (value: "millimeters" | "inches") => void;
+  toggleDaysList: () => void;
+  setSelectedDay: (value: string) => void;
 };
 
 export type LocationStore = LocationState & LocationActions;
@@ -34,6 +38,8 @@ export const defaultInitialState: LocationState = {
   selectedTemperature: "Celsius",
   selectedWindSpeed: "km/h",
   selectedPrecipitation: "millimeters",
+  isDayslistMounted: false,
+  selectedDay: undefined,
 };
 
 export const createLocationStore = (
@@ -63,5 +69,8 @@ export const createLocationStore = (
       set(() => ({ selectedPrecipitation: value })),
     setSelectedWindSpeed: (value: "km/h" | "mph") =>
       set(() => ({ selectedWindSpeed: value })),
+    toggleDaysList: () =>
+      set((state) => ({ isDayslistMounted: !state.isDayslistMounted })),
+    setSelectedDay: (input: string) => set(() => ({ selectedDay: input })),
   }));
 };

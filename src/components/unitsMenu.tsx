@@ -29,7 +29,7 @@ const UnitsMenu = ({ menuRef }: UnitsMenuProps) => {
       role="menu"
       id="units-menu"
       aria-label="Units menu"
-      className="absolute top-12 right-6 bg-[#262540] px-2 py-[0.375rem] w-[13.375rem] z-50 rounded-xl"
+      className="absolute top-12 right-6 bg-[#262540] border border-[#3C3B5E] px-2 py-[0.375rem] w-[13.375rem] z-50 rounded-xl"
     >
       <button
         role="menuitem"

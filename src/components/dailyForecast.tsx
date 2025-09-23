@@ -19,11 +19,12 @@ const DailyForecast = ({ data }: DailyForecastProps) => {
         className="grid grid-cols-3 md:grid-cols-7 gap-4"
       >
         {data.map(({ maxTemp, minTemp, day, weatherCode }, index) => {
+          console.log(day);
           return (
             <motion.li
               variants={listItem}
               key={day || index}
-              className="p-4 bg-[#3C3B5E] rounded-xl"
+              className="p-4 bg-[#262540] rounded-xl border border-[#3C3B5E]"
             >
               <span className="text-center block text-lg text-white font-medium">
                 {day}

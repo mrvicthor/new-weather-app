@@ -17,6 +17,8 @@ import { getForecasts } from "../utils/getForecasts";
 import { useLocationSearch } from "../hooks/useLocationSearch";
 import { useWeather } from "../hooks/useWeather";
 import { convertMillimetersToInches } from "../utils/convertMillimetersToInches";
+import DaysDropDown from "../components/daysDropdown";
+import { useToggleDaysDropdown } from "../hooks/useToggleDaysDropdown";
 
 const Home = ({
   useLocationStoreHook = useLocationStore,
@@ -34,6 +36,9 @@ const Home = ({
     selectedTemperature,
     selectedWindSpeed,
     selectedPrecipitation,
+    toggleDaysList,
+    isDayslistMounted,
+    selectedDay,
   } = useLocationStoreHook((state) => state);
 
   const debouncedValue = useDebounceHook(searchQuery);
@@ -44,6 +49,9 @@ const Home = ({
     error,
     isLoading,
   } = useLocationSearch(debouncedValue);
+
+  const { menuRef, buttonRef, itemsRef, handleKeyDown } =
+    useToggleDaysDropdown(isDayslistMounted);
 
   const { data, isError, isPending } = useWeather(
     Number(latitude),
@@ -58,8 +66,10 @@ const Home = ({
     return <ErrorPage />;
   }
 
-  const { formattedDate, formatDay, hourlyForecast, dailyForecast } =
+  const { formattedDate, hourlyForecast, dailyForecast, formatDay, daysList } =
     getForecastsFn(data);
+
+  console.log(daysList);
 
   return (
     <>
@@ -72,9 +82,9 @@ const Home = ({
           <SearchBar />
           <div className="relative w-[41rem] gap-4">
             {debouncedValue && searchResults && searchResults.length > 0 && (
-              <ul className="absolute top-4 bg-[#262540] px-2 py-3 right-0 left-0 md:w-[33rem] rounded-lg max-h-60 overflow-y-auto z-50">
+              <ul className="absolute top-4 bg-[#262540] border border-[#302F4A] px-2 py-3 right-0 left-0 md:w-[33rem] rounded-lg max-h-60 overflow-y-auto z-50">
                 {isLoading && (
-                  <li className="text-white p-4 border-b border-b-[#3C3B5E] h-[2.4375rem] flex gap-4 items-center">
+                  <li className="text-white p-4 border border-[#302F4A] h-[2.4375rem] flex gap-4 items-center">
                     <img src="/assets/images/icon-loading.svg" alt="loading" />{" "}
                     Search in progress
                   </li>
@@ -82,7 +92,7 @@ const Home = ({
                 {searchResults?.map((city) => (
                   <li
                     key={city.id}
-                    className="text-white rounded-lg hover:bg-[#3C3B5E] cursor-pointer px-2 py-[0.625rem]"
+                    className="text-white rounded-lg hover:bg-[#302F4A] hover:border border-[#3C3B5E] cursor-pointer px-2 py-[0.625rem]"
                     onClick={() => {
                       setLocation(city.latitude, city.longitude);
                       setSearchQuery("");
@@ -149,14 +159,30 @@ const Home = ({
               </div>
             </div>
             <div className="bg-[#262540] rounded-[1.25rem] px-6 py-6 ">
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center relative">
                 <p className="text-[1.25rem] font-semibold text-white">
                   Hourly forecast
                 </p>
-                <button className="py-2 px-4 bg-[#3C3B5E] flex items-center gap-1 justify-between rounded-lg capitalize text-white cursor-pointer">
-                  {formatDay}
-                  <img src="/assets/images/icon-dropdown.svg" />
+                <button
+                  ref={buttonRef}
+                  onClick={toggleDaysList}
+                  aria-haspopup="true"
+                  aria-expanded={isDayslistMounted}
+                  aria-controls="days-menu"
+                  id="days-menu-button"
+                  className="py-2 px-4 bg-[#3C3B5E] flex items-center gap-1 justify-between rounded-lg capitalize text-white cursor-pointer"
+                >
+                  {selectedDay || formatDay}
+                  <img src="/assets/images/icon-dropdown.svg" alt="" />
                 </button>
+                {isDayslistMounted && (
+                  <DaysDropDown
+                    daysList={daysList}
+                    menuRef={menuRef}
+                    itemsRef={itemsRef}
+                    handleKeyDown={handleKeyDown}
+                  />
+                )}
               </div>
               <HourlyForecasts data={hourlyForecast} />
             </div>

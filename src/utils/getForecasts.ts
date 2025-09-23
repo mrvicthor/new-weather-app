@@ -13,6 +13,7 @@ export function getForecasts(data: WeatherApiResponse) {
 
   const hourlyForecast: HourlyForecast[] = [];
   const dailyForecast: Forecast[] = [];
+  const daysList: string[] = [];
   for (let i = 0; i < 7; i++) {
     const forecast: Forecast = {
       day: new Date(data.weather.daily.time[i]).toLocaleDateString("en-US", {
@@ -34,5 +35,20 @@ export function getForecasts(data: WeatherApiResponse) {
     };
     hourlyForecast.push(forecast);
   }
-  return { today, formattedDate, formatDay, hourlyForecast, dailyForecast };
+
+  for (let i = 0; i < 7; i++) {
+    daysList.push(
+      new Date(data.weather.daily.time[i]).toLocaleDateString("en-US", {
+        weekday: "long",
+      })
+    );
+  }
+  return {
+    today,
+    formattedDate,
+    hourlyForecast,
+    dailyForecast,
+    formatDay,
+    daysList,
+  };
 }

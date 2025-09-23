@@ -11,6 +11,7 @@ export function useWeather(latitude: number, longitude: number) {
         fetchLocation(Number(latitude), Number(longitude)),
         fetchWeatherDetails(Number(latitude), Number(longitude)),
       ]);
+
       return { location, weather };
     },
     enabled: latitude != null && longitude != null,
