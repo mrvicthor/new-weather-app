@@ -70,5 +70,18 @@ describe("fetchLocation", () => {
         );
       });
     });
+
+    describe("request url", () => {
+      test("should call the correct url with the location parameter", async () => {
+        fetchMock.mockResponseOnce(JSON.stringify({ results: [] }));
+
+        const location = "New York";
+        await fetchLocationWeather(location);
+
+        expect(fetchMock).toHaveBeenCalledWith(
+          `https://geocoding-api.open-meteo.com/v1/search?name=${location}&count=4`
+        );
+      });
+    });
   });
 });
