@@ -136,5 +136,19 @@ describe("fetchLocation", () => {
         expect(result).toEqual(mockData);
       });
     });
+
+    describe("error handling", () => {
+      test("should throw error when response is not ok", async () => {
+        fetchMock.mockResponseOnce("Not found", { status: 404 });
+
+        await expect(fetchLocation(40.7128, -74.006)).rejects.toThrow(
+          "Error fetching location details"
+        );
+
+        expect(console.error).toHaveBeenCalledWith(
+          "Error fetching weather details: Error: Error fetching location details"
+        );
+      });
+    });
   });
 });
