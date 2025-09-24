@@ -313,6 +313,18 @@ describe("fetchLocation", () => {
         );
         expect(result).toEqual(mockWeatherData);
       });
+
+      test("should handle different coordinates format", async () => {
+        const mockData = createMockWeatherResponse({
+          latitude: 6.5244,
+          longitude: 3.3792,
+        });
+        fetchMock.mockResponseOnce(JSON.stringify(mockData));
+        await fetchWeatherDetails(6.5244, 3.3792);
+        expect(fetchMock).toHaveBeenCalledWith(
+          expect.stringContaining("latitude=6.5244&longitude=3.3792")
+        );
+      });
     });
   });
 });

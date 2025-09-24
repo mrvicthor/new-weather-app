@@ -49,7 +49,6 @@ export const fetchLocationWeather = async (
     }
 
     const result = response.json();
-    console.log({ result });
     return result;
   } catch (error) {
     console.error("Fetch location error:", error);
