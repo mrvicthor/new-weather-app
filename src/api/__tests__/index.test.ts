@@ -56,6 +56,19 @@ describe("fetchLocation", () => {
           expect.any(Error)
         );
       });
+
+      test("should throw error on network failure", async () => {
+        fetchMock.mockRejectOnce(new Error("Network error"));
+
+        await expect(fetchLocationWeather("lagos")).rejects.toThrow(
+          "Network error"
+        );
+
+        expect(console.error).toHaveBeenCalledWith(
+          "Fetch location error:",
+          expect.any(Error)
+        );
+      });
     });
   });
 });
