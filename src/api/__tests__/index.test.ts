@@ -161,6 +161,15 @@ describe("fetchLocation", () => {
           "Error fetching weather details: Error: Network error"
         );
       });
+
+      test("should handle invalid JSON response", async () => {
+        fetchMock.mockResponseOnce("Invalid JSON", {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+
+        await expect(fetchLocation(40.7128, -74.006)).rejects.toThrow();
+      });
     });
   });
 });
