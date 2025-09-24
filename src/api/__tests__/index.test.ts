@@ -171,5 +171,19 @@ describe("fetchLocation", () => {
         await expect(fetchLocation(40.7128, -74.006)).rejects.toThrow();
       });
     });
+
+    describe("edge cases", () => {
+      test("should handle zero coordinates", async () => {
+        const mockData = { display_name: "Equator and Prime Meridian" };
+        fetchMock.mockResponseOnce(JSON.stringify(mockData));
+        const result = await fetchLocation(0, 0);
+
+        expect(fetchMock).toHaveBeenCalledWith(
+          "https://nominatim.openstreetmap.org/reverse?lat=0&lon=0&format=json"
+        );
+
+        expect(result).toEqual(mockData);
+      });
+    });
   });
 });
