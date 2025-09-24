@@ -198,5 +198,16 @@ describe("fetchLocation", () => {
         expect(result).toBeNull();
       });
     });
+
+    describe("inspect request url", () => {
+      test("should call the correct url with the latitude and longitude parameters", async () => {
+        fetchMock.mockResponseOnce(JSON.stringify({}));
+        await fetchLocation(12.34567, -98.76543);
+
+        expect(fetchMock).toHaveBeenCalledWith(
+          "https://nominatim.openstreetmap.org/reverse?lat=12.34567&lon=-98.76543&format=json"
+        );
+      });
+    });
   });
 });
