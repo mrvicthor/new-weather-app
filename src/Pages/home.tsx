@@ -73,7 +73,7 @@ const Home = ({
   const formatDay = selectedDay.toLocaleDateString("en-US", {
     weekday: "long",
   });
-  console.log({ data });
+
   return (
     <>
       <Header />
