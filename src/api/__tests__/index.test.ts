@@ -149,6 +149,18 @@ describe("fetchLocation", () => {
           "Error fetching weather details: Error: Error fetching location details"
         );
       });
+
+      test("should throw error on network failure", async () => {
+        fetchMock.mockRejectOnce(new Error("Network error"));
+
+        await expect(fetchLocation(40.7128, -74.006)).rejects.toThrow(
+          "Network error"
+        );
+
+        expect(console.error).toHaveBeenCalledWith(
+          "Error fetching weather details: Error: Network error"
+        );
+      });
     });
   });
 });
