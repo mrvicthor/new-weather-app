@@ -184,6 +184,19 @@ describe("fetchLocation", () => {
 
         expect(result).toEqual(mockData);
       });
+
+      test("should handle empty responses", async () => {
+        fetchMock.mockResponseOnce(JSON.stringify({}), { status: 200 });
+        const result = await fetchLocation(40.7128, -74.006);
+        expect(result).toEqual({});
+      });
+
+      test("should handle null response", async () => {
+        fetchMock.mockResponseOnce(JSON.stringify(null));
+
+        const result = await fetchLocation(40.7128, -74.006);
+        expect(result).toBeNull();
+      });
     });
   });
 });
