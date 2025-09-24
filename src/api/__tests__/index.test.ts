@@ -16,30 +16,46 @@ describe("fetchLocation", () => {
   });
 
   describe("FetchLocationWeather", () => {
-    test("should fetch location data successfully", async () => {
-      const mockLocationData: SearchResult = {
-        admin1: "Lagos",
-        admin1_id: 2332453,
-        country: "Nigeria",
-        country_code: "NG",
-        country_id: 2328926,
-        elevation: 11,
-        feature_code: "PPLA2",
-        id: 2332459,
-        latitude: 6.45407,
-        longitude: 3.39467,
-        name: "Lagos",
-        population: 15388000,
-        timezone: "Africa/Lagos",
-      };
-      fetchMock.mockResponseOnce(JSON.stringify(mockLocationData));
+    describe("successful request", () => {
+      test("should fetch location data successfully", async () => {
+        const mockLocationData: SearchResult = {
+          admin1: "Lagos",
+          admin1_id: 2332453,
+          country: "Nigeria",
+          country_code: "NG",
+          country_id: 2328926,
+          elevation: 11,
+          feature_code: "PPLA2",
+          id: 2332459,
+          latitude: 6.45407,
+          longitude: 3.39467,
+          name: "Lagos",
+          population: 15388000,
+          timezone: "Africa/Lagos",
+        };
+        fetchMock.mockResponseOnce(JSON.stringify(mockLocationData));
 
-      const result = await fetchLocationWeather("lagos");
-      expect(fetchMock).toHaveBeenCalledTimes(1);
-      expect(fetchMock).toHaveBeenCalledWith(
-        "https://geocoding-api.open-meteo.com/v1/search?name=lagos&count=4"
-      );
-      expect(result).toEqual(mockLocationData);
+        const result = await fetchLocationWeather("lagos");
+        expect(fetchMock).toHaveBeenCalledTimes(1);
+        expect(fetchMock).toHaveBeenCalledWith(
+          "https://geocoding-api.open-meteo.com/v1/search?name=lagos&count=4"
+        );
+        expect(result).toEqual(mockLocationData);
+      });
+    });
+    describe("failed request", () => {
+      test("should throw error when response is not ok", async () => {
+        fetchMock.mockResponseOnce("Not found", { status: 404 });
+
+        await expect(fetchLocationWeather("lagos")).rejects.toThrow(
+          "Error fetching location weather details"
+        );
+
+        expect(console.error).toHaveBeenCalledWith(
+          "Fetch location error:",
+          expect.any(Error)
+        );
+      });
     });
   });
 });
