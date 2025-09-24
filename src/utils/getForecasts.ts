@@ -16,7 +16,19 @@ export function getForecasts(data: WeatherApiResponse, selectedDay: Date) {
   const formattedDate = today.toLocaleDateString("en-US", options);
   const formatDay = today.toLocaleDateString("en-US", { weekday: "long" });
 
-  const hourlyForecast: HourlyForecast[] = [];
+  const hourlyForecast: HourlyForecast[] = data.weather.hourly.time
+    .map((time, index) => ({
+      date: new Date(time),
+      weatherCode: data.weather.hourly.weather_code[index],
+      time: new Date(time).toLocaleDateString("en-US", {
+        hour: "2-digit",
+      }),
+      temperature: Math.ceil(data.weather.hourly.temperature_2m[index]),
+    }))
+    .filter(
+      (forecast) =>
+        new Date(forecast.date).getDay() === new Date(selectedDay).getDay()
+    );
   const dailyForecast: Forecast[] = [];
   const daysList: Day[] = [];
   for (let i = 0; i < 7; i++) {
@@ -29,26 +41,6 @@ export function getForecasts(data: WeatherApiResponse, selectedDay: Date) {
       weatherCode: data.weather.daily.weather_code[i],
     };
     dailyForecast.push(forecast);
-  }
-
-  for (let i = 0; i < data.weather.hourly.time.length; i++) {
-    if (
-      new Date(selectedDay).getDay() ===
-      new Date(data.weather.hourly.time[i]).getDay()
-    ) {
-      const forecast: HourlyForecast = {
-        date: new Date(data.weather.hourly.time[i]),
-        weatherCode: data.weather.hourly.weather_code[i],
-        time: new Date(data.weather.hourly.time[i]).toLocaleDateString(
-          "en-US",
-          {
-            hour: "2-digit",
-          }
-        ),
-        temperature: Math.ceil(data.weather.hourly.temperature_2m[i]),
-      };
-      hourlyForecast.push(forecast);
-    }
   }
 
   for (let i = 0; i < 7; i++) {
