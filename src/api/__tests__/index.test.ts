@@ -1,4 +1,4 @@
-import { fetchLocationWeather } from "..";
+import { fetchLocation, fetchLocationWeather } from "..";
 import fetchMock from "jest-fetch-mock";
 import type { SearchResult } from "../../types";
 
@@ -15,7 +15,7 @@ describe("fetchLocation", () => {
     consoleErrorSpy.mockRestore();
   });
 
-  describe("FetchLocationWeather", () => {
+  describe("fetchLocationWeather", () => {
     describe("successful request", () => {
       test("should fetch location data successfully", async () => {
         const mockLocationData: SearchResult = {
@@ -81,6 +81,59 @@ describe("fetchLocation", () => {
         expect(fetchMock).toHaveBeenCalledWith(
           `https://geocoding-api.open-meteo.com/v1/search?name=${location}&count=4`
         );
+      });
+    });
+  });
+
+  describe("fetchLocation", () => {
+    describe("successful request", () => {
+      test("should fetch location data successfully", async () => {
+        const mockLocationData = {
+          place_id: 123456,
+          licence: "Data © OpenStreetMap contributors, ODbL 1.0",
+          osm_type: "way",
+          osm_id: 456789,
+          lat: "40.7128",
+          lon: "-74.0060",
+          display_name: "New York, NY, USA",
+          address: {
+            city: "New York",
+            state: "New York",
+            country: "United States",
+            postcode: "10001",
+          },
+        };
+
+        fetchMock.mockResponseOnce(JSON.stringify(mockLocationData));
+        const result = await fetchLocation(40.7128, -74.006);
+
+        expect(fetchMock).toHaveBeenCalledTimes(1);
+        expect(fetchMock).toHaveBeenCalledWith(
+          "https://nominatim.openstreetmap.org/reverse?lat=40.7128&lon=-74.006&format=json"
+        );
+        expect(result).toEqual(mockLocationData);
+      });
+
+      test("should handle different coordinates format", async () => {
+        const mockData = { display_name: "Test Location" };
+        fetchMock.mockResponseOnce(JSON.stringify(mockData));
+        const result = await fetchLocation(6.5244, 3.3792);
+
+        expect(fetchMock).toHaveBeenCalledWith(
+          "https://nominatim.openstreetmap.org/reverse?lat=6.5244&lon=3.3792&format=json"
+        );
+        expect(result).toEqual(mockData);
+      });
+
+      test("should handle custom response headers", async () => {
+        const mockData = { display_name: "Test Location with Headers" };
+        fetchMock.mockResponseOnce(JSON.stringify(mockData), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+        const result = await fetchLocation(34.0522, -118.2437);
+
+        expect(result).toEqual(mockData);
       });
     });
   });
