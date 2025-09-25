@@ -116,12 +116,12 @@ const Home = ({
           <section className="grid lg:grid-cols-3 md:grid-rows-[43.3125rem] mt-8 lg:mt-12 gap-8">
             <div className="lg:col-span-2">
               <Location
-                temperature={data.weather.current.temperature_2m ?? 0}
-                city={data.location.address.city ?? "Unknown City"}
-                state={data.location.address.state ?? "Unknown State"}
+                temperature={data?.weather?.current?.temperature_2m ?? 0}
+                city={data?.location?.address?.city ?? "Unknown City"}
+                state={data?.location?.address?.state ?? "Unknown State"}
                 date={formattedDate}
-                country={data.location.address.country ?? "Unknown Country"}
-                weatherCode={data.weather.current.weather_code}
+                country={data?.location?.address?.country ?? "Unknown Country"}
+                weatherCode={data?.weather?.current?.weather_code}
               />
               <div className="grid grid-cols-2 md:grid-cols-4 mt-5 lg:mt-8 gap-6">
                 <Card
@@ -134,13 +134,13 @@ const Home = ({
                 />
                 <Card
                   title="humidity"
-                  value={data.weather.current.relative_humidity_2m}
-                  unit={data.weather.current_units.relative_humidity_2m}
+                  value={data?.weather?.current?.relative_humidity_2m}
+                  unit={data?.weather?.current_units?.relative_humidity_2m}
                 />
                 <CardWithSpace
                   title="wind"
                   value={convertSpeed(
-                    data.weather.current.wind_speed_10m,
+                    data?.weather?.current?.wind_speed_10m,
                     selectedWindSpeed
                   )}
                   unit={selectedWindSpeed === "km/h" ? "km/h" : "mph"}
@@ -148,8 +148,8 @@ const Home = ({
                 <CardWithSpace
                   title="precipitation"
                   value={convertMillimetersToInches(
-                    data.weather.current.precipitation,
-                    data.weather.current_units.precipitation
+                    data?.weather?.current?.precipitation,
+                    data?.weather?.current_units?.precipitation
                   )}
                   unit={selectedPrecipitation === "millimeters" ? "mm" : "in"}
                 />
