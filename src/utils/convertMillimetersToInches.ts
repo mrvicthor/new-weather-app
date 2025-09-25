@@ -11,5 +11,5 @@ export const convertMillimetersToInches = (
   } else {
     result = unit / 25.4;
   }
-  return Math.floor(result * 100) / 100; // rounding to 2 decimal places
+  return Math.round(result * 100) / 100; // rounding to 2 decimal places
 };
