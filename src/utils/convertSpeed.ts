@@ -3,7 +3,7 @@ export const convertSpeed = (
   fromUnit: "km/h" | "mph"
 ): number => {
   if (fromUnit === "km/h") {
-    return Math.floor(speed);
+    return Math.round(speed);
   }
 
   let speedInMph: number;
@@ -13,5 +13,5 @@ export const convertSpeed = (
     speedInMph = speed * 1.609;
   }
 
-  return Math.floor(speedInMph);
+  return Math.round(speedInMph);
 };
