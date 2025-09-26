@@ -120,4 +120,36 @@ describe("getForecasts", () => {
       expect(forecast.date.getDay()).toBe(selectedDay.getDay());
     });
   });
+
+  test("should format hourly forecasts data correctly", () => {
+    const selectedDay = new Date("2024-03-15'");
+    const result = getForecasts(mockData, selectedDay);
+
+    if (result.hourlyForecast.length > 0) {
+      const firstForecast = result.hourlyForecast[0];
+      expect(firstForecast.date).toEqual(
+        new Date(mockData.weather.hourly.time[0])
+      );
+      expect(firstForecast.weatherCode).toBe(
+        mockData.weather.hourly.weather_code[0]
+      );
+      expect(firstForecast.temperature).toBe(
+        Math.round(mockData.weather.hourly.temperature_2m[0])
+      );
+      expect(firstForecast.time).toBe(
+        new Date(mockData.weather.hourly.time[0]).toLocaleDateString("en-US", {
+          hour: "2-digit",
+        })
+      );
+    }
+  });
+
+  test("should handle different selected days", () => {
+    const selectedDay = new Date("2024-03-16");
+    const result = getForecasts(mockData, selectedDay);
+
+    expect(result.today).toEqual(new Date(mockCurrentTime));
+    expect(result.dailyForecast).toHaveLength(7);
+    expect(result.daysList).toHaveLength(7);
+  });
 });
