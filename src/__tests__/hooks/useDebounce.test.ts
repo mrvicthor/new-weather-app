@@ -26,4 +26,41 @@ describe("useDebounce", () => {
     });
     expect(result.current).toBe("updated");
   });
+
+  test("should cancel previous timeout if value changes before delay", () => {
+    const { result, rerender } = renderHook(
+      ({ value }) => useDebounce(value, 500),
+      {
+        initialProps: { value: "first" },
+      }
+    );
+    rerender({ value: "second" });
+    act(() => {
+      vi.advanceTimersByTime(300);
+    });
+    rerender({ value: "third" });
+    expect(result.current).toBe("first");
+    act(() => {
+      vi.advanceTimersByTime(500);
+    });
+    expect(result.current).toBe("third");
+  });
+
+  test("should respect custom delay", () => {
+    const { result, rerender } = renderHook(
+      ({ value, delay }) => useDebounce(value, delay),
+      {
+        initialProps: { value: "start", delay: 1000 },
+      }
+    );
+    rerender({ value: "changed", delay: 1000 });
+    act(() => {
+      vi.advanceTimersByTime(500);
+    });
+    expect(result.current).toBe("start");
+    act(() => {
+      vi.advanceTimersByTime(500);
+    });
+    expect(result.current).toBe("changed");
+  });
 });
