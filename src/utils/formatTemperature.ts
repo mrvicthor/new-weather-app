@@ -1,6 +1,6 @@
 export const formatTemperatureToFahrenheit = (value: number): number => {
   const result = (value * 9) / 5 + 32;
-  return Math.ceil(result);
+  return Math.round(result);
 };
 
 export const getDisplayTemperature = (
@@ -9,4 +9,4 @@ export const getDisplayTemperature = (
 ) =>
   selectedTemperature === "Fahrenheit"
     ? formatTemperatureToFahrenheit(temperature)
-    : Math.ceil(temperature);
+    : Math.round(temperature);
