@@ -6,8 +6,8 @@ export const convertSpeed = (
   if (fromUnit === "mph") {
     speedInMph = speed / 1.609;
   } else {
-    speedInMph = speed * 1.609;
+    speedInMph = speed;
   }
 
-  return Math.ceil(speedInMph);
+  return Math.round(speedInMph);
 };
