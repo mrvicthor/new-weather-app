@@ -111,4 +111,13 @@ describe("getForecasts", () => {
       );
     });
   });
+
+  test("should format hourly forecasts for the selected day", () => {
+    const selectedDay = new Date("2024-03-15'");
+    const result = getForecasts(mockData, selectedDay);
+
+    result.hourlyForecast.forEach((forecast) => {
+      expect(forecast.date.getDay()).toBe(selectedDay.getDay());
+    });
+  });
 });
