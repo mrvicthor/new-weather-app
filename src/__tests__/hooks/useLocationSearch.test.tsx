@@ -121,7 +121,7 @@ describe("useLocationSearch", () => {
   });
 
   test("should return empty array when API returns empty results", async () => {
-    mockFetchLocationWeather.mockResolvedValueOnce({ results: [] });
+    mockFetchLocationWeather.mockResolvedValueOnce(null);
 
     const { result } = renderHook(() => useLocationSearch("London"), {
       wrapper: createWrapper(queryClient),
@@ -136,7 +136,7 @@ describe("useLocationSearch", () => {
   });
 
   it("should return empty array when API returns data without results", async () => {
-    mockFetchLocationWeather.mockResolvedValueOnce({ results: [] });
+    mockFetchLocationWeather.mockResolvedValueOnce(null);
 
     const { result } = renderHook(() => useLocationSearch("InvalidCity"), {
       wrapper: createWrapper(queryClient),
@@ -148,5 +148,20 @@ describe("useLocationSearch", () => {
 
     expect(result.current.data).toEqual([]);
     expect(mockFetchLocationWeather).toHaveBeenCalledWith("InvalidCity");
+  });
+
+  test("should return empty array when API returns empty results", async () => {
+    mockFetchLocationWeather.mockResolvedValueOnce({ results: [] });
+
+    const { result } = renderHook(() => useLocationSearch("EmptyResults"), {
+      wrapper: createWrapper(queryClient),
+    });
+
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true);
+    });
+
+    expect(result.current.data).toEqual([]);
+    expect(mockFetchLocationWeather).toHaveBeenCalledWith("EmptyResults");
   });
 });
