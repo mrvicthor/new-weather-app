@@ -164,4 +164,21 @@ describe("useLocationSearch", () => {
     expect(result.current.data).toEqual([]);
     expect(mockFetchLocationWeather).toHaveBeenCalledWith("EmptyResults");
   });
+
+  it("should be enabled only when debouncedValue has length > 0", () => {
+    const { result: emptyResult } = renderHook(() => useLocationSearch(""), {
+      wrapper: createWrapper(queryClient),
+    });
+
+    expect(emptyResult.current.isEnabled).toBe(false);
+
+    const { result: nonEmptyResult } = renderHook(
+      () => useLocationSearch("Paris"),
+      {
+        wrapper: createWrapper(queryClient),
+      }
+    );
+
+    expect(nonEmptyResult.current.isEnabled).toBe(true);
+  });
 });
