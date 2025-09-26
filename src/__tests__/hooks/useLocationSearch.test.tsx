@@ -165,7 +165,7 @@ describe("useLocationSearch", () => {
     expect(mockFetchLocationWeather).toHaveBeenCalledWith("EmptyResults");
   });
 
-  it("should be enabled only when debouncedValue has length > 0", () => {
+  test("should be enabled only when debouncedValue has length > 0", () => {
     const { result: emptyResult } = renderHook(() => useLocationSearch(""), {
       wrapper: createWrapper(queryClient),
     });
@@ -180,5 +180,70 @@ describe("useLocationSearch", () => {
     );
 
     expect(nonEmptyResult.current.isEnabled).toBe(true);
+  });
+
+  test("should refetch when debouncedValue changes", async () => {
+    const parisResult: SearchResult = {
+      admin1: "Île-de-France",
+      admin1_id: 3012874,
+      country: "France",
+      country_code: "FR",
+      country_id: 3017382,
+      elevation: 35,
+      feature_code: "PPLC",
+      id: 2988507,
+      latitude: 48.8566,
+      longitude: 2.3522,
+      name: "Paris",
+      population: 2165423,
+      timezone: "Europe/Paris",
+    };
+
+    const londonResult: SearchResult = {
+      admin1: "England",
+      admin1_id: 6269131,
+      country: "United Kingdom",
+      country_code: "GB",
+      country_id: 2635167,
+      elevation: 25,
+      feature_code: "PPLC",
+      id: 2643743,
+      latitude: 51.5074,
+      longitude: -0.1278,
+      name: "London",
+      population: 8982000,
+      timezone: "Europe/London",
+    };
+
+    mockFetchLocationWeather
+      .mockResolvedValueOnce({ results: [parisResult] })
+      .mockResolvedValueOnce({ results: [londonResult] });
+
+    const { result, rerender } = renderHook(
+      ({ searchValue }: { searchValue: string }) =>
+        useLocationSearch(searchValue),
+      {
+        wrapper: createWrapper(queryClient),
+        initialProps: { searchValue: "Paris" },
+      }
+    );
+
+    // Wait for first query to complete
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true);
+    });
+
+    expect(result.current.data).toEqual([parisResult]);
+    expect(mockFetchLocationWeather).toHaveBeenCalledWith("Paris");
+
+    // Change the search value
+    rerender({ searchValue: "London" });
+
+    await waitFor(() => {
+      expect(result.current.data).toEqual([londonResult]);
+    });
+
+    expect(mockFetchLocationWeather).toHaveBeenCalledWith("London");
+    expect(mockFetchLocationWeather).toHaveBeenCalledTimes(2);
   });
 });
