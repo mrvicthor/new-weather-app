@@ -11,7 +11,6 @@ type HourlyForecastProp = {
 };
 
 const HourlyForecasts = ({ data }: HourlyForecastProp) => {
-  console.log(data);
   const { selectedTemperature } = useLocationStore((state) => state);
 
   return (
