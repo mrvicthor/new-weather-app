@@ -23,7 +23,7 @@ export function getForecasts(data: WeatherApiResponse, selectedDay: Date) {
       time: new Date(time).toLocaleDateString("en-US", {
         hour: "2-digit",
       }),
-      temperature: Math.ceil(data.weather.hourly.temperature_2m[index]),
+      temperature: Math.round(data.weather.hourly.temperature_2m[index]),
     }))
     .filter(
       (forecast) =>
@@ -36,8 +36,8 @@ export function getForecasts(data: WeatherApiResponse, selectedDay: Date) {
       day: new Date(data.weather.daily.time[i]).toLocaleDateString("en-US", {
         weekday: "short",
       }),
-      maxTemp: Math.ceil(data.weather.daily.temperature_2m_max[i]),
-      minTemp: Math.ceil(data.weather.daily.temperature_2m_min[i]),
+      maxTemp: Math.round(data.weather.daily.temperature_2m_max[i]),
+      minTemp: Math.round(data.weather.daily.temperature_2m_min[i]),
       weatherCode: data.weather.daily.weather_code[i],
     };
     dailyForecast.push(forecast);
