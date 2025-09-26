@@ -134,4 +134,19 @@ describe("useLocationSearch", () => {
     expect(result.current.data).toEqual([]);
     expect(mockFetchLocationWeather).toHaveBeenCalledWith("London");
   });
+
+  it("should return empty array when API returns data without results", async () => {
+    mockFetchLocationWeather.mockResolvedValueOnce({ results: [] });
+
+    const { result } = renderHook(() => useLocationSearch("InvalidCity"), {
+      wrapper: createWrapper(queryClient),
+    });
+
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true);
+    });
+
+    expect(result.current.data).toEqual([]);
+    expect(mockFetchLocationWeather).toHaveBeenCalledWith("InvalidCity");
+  });
 });
