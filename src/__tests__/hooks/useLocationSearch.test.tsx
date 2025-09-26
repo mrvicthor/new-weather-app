@@ -246,4 +246,31 @@ describe("useLocationSearch", () => {
     expect(mockFetchLocationWeather).toHaveBeenCalledWith("London");
     expect(mockFetchLocationWeather).toHaveBeenCalledTimes(2);
   });
+
+  test("should handle transition from enabled to disabled state", async () => {
+    mockFetchLocationWeather.mockResolvedValueOnce(mockApiResponse);
+
+    const { result, rerender } = renderHook(
+      ({ searchValue }: { searchValue: string }) =>
+        useLocationSearch(searchValue),
+      {
+        wrapper: createWrapper(queryClient),
+        initialProps: { searchValue: "Berlin" },
+      }
+    );
+
+    // Wait for query to complete
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true);
+    });
+
+    expect(result.current.data).toEqual(mockSearchResults);
+
+    // Change to empty string (should disable query)
+    rerender({ searchValue: "" });
+
+    expect(result.current.isEnabled).toBe(false);
+    // Previous data should still be available
+    expect(result.current.data).toEqual(undefined);
+  });
 });
