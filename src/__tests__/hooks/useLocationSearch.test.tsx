@@ -266,11 +266,10 @@ describe("useLocationSearch", () => {
 
     expect(result.current.data).toEqual(mockSearchResults);
 
-    // Change to empty string (should disable query)
     rerender({ searchValue: "" });
 
     expect(result.current.isEnabled).toBe(false);
-    // Previous data should still be available
+
     expect(result.current.data).toEqual(undefined);
   });
 });
