@@ -270,4 +270,19 @@ describe("useToggleUnit", () => {
       expect(mockFocus).toHaveBeenCalledTimes(1);
     });
   });
+
+  describe("useEffect dependency array", () => {
+    test("should only run effect once (empty dependency array)", () => {
+      const { rerender } = renderHook(() =>
+        useToggleUnit(mockToggleUnitsMounted)
+      );
+
+      vi.clearAllMocks();
+
+      rerender();
+
+      expect(document.addEventListener).not.toHaveBeenCalled();
+      expect(document.removeEventListener).not.toHaveBeenCalled();
+    });
+  });
 });
