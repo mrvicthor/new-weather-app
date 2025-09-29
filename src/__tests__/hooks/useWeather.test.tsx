@@ -176,4 +176,46 @@ describe("useWeather", () => {
     expect(queries.length).toBe(1);
     expect(queries[0].queryKey).toEqual(["location", 51.5074, -0.1278]);
   });
+
+  test("should update when coordinates change", async () => {
+    const mockLocationData1 = { name: "London" };
+    const mockWeatherData1 = { temperature: 20 };
+    const mockLocationData2 = { name: "Paris" };
+    const mockWeatherData2 = { temperature: 22 };
+
+    mockFetchLocation
+      .mockResolvedValueOnce(mockLocationData1)
+      .mockResolvedValueOnce(mockLocationData2);
+
+    mockFetchWeatherDetails
+      .mockResolvedValueOnce(mockWeatherData1)
+      .mockResolvedValueOnce(mockWeatherData2);
+
+    const { result, rerender } = renderHook(
+      ({ lat, lng }) => useWeather(lat, lng),
+      {
+        wrapper: createWrapper(),
+        initialProps: { lat: 51.5074, lng: -0.1278 },
+      }
+    );
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(result.current.data?.location).toEqual(mockLocationData1);
+    expect(result.current.data?.weather).toEqual(mockWeatherData1);
+
+    rerender({ lat: 48.8566, lng: 2.3522 });
+
+    await waitFor(() => expect(result.current.isFetching).toBe(true));
+
+    await waitFor(() => {
+      return result.current.data?.location === mockLocationData2;
+    });
+
+    expect(result.current.data?.location).toEqual(mockLocationData2);
+    expect(result.current.data?.weather).toEqual(mockWeatherData2);
+
+    // Both API functions should have been called twice
+    expect(mockFetchLocation).toHaveBeenCalledTimes(2);
+    expect(mockFetchWeatherDetails).toHaveBeenCalledTimes(2);
+  });
 });
