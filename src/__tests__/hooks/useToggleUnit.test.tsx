@@ -201,5 +201,23 @@ describe("useToggleUnit", () => {
       expect(mockToggleUnitsMounted).toHaveBeenCalledTimes(1);
       expect(mockFocus).toHaveBeenCalledTimes(1);
     });
+
+    test("should NOT call toggleUnitsMounted for non-Escape keys", () => {
+      renderHook(() => useToggleUnit(mockToggleUnitsMounted));
+
+      const mockEvent = {
+        key: "Enter",
+      } as unknown as KeyboardEvent;
+
+      act(() => {
+        const calls = vi.mocked(document.addEventListener).mock.calls;
+        const keydownHandler = calls.find(
+          (call) => call[0] === "keydown"
+        )?.[1] as (event: KeyboardEvent) => void;
+        keydownHandler(mockEvent);
+      });
+
+      expect(mockToggleUnitsMounted).not.toHaveBeenCalled();
+    });
   });
 });
