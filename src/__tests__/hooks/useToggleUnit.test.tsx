@@ -150,5 +150,24 @@ describe("useToggleUnit", () => {
       });
       expect(mockToggleUnitsMounted).not.toHaveBeenCalled();
     });
+
+    test("should handle null refs gracefully", () => {
+      renderHook(() => useToggleUnit(mockToggleUnitsMounted));
+      const mockEvent = {
+        target: document.createElement("div"),
+      } as unknown as MouseEvent;
+
+      expect(() => {
+        act(() => {
+          const calls = vi.mocked(document.addEventListener).mock.calls;
+          const mousedownHandler = calls.find(
+            (call) => call[0] === "mousedown"
+          )?.[1] as (event: MouseEvent) => void;
+          mousedownHandler(mockEvent);
+        });
+      }).not.toThrow();
+
+      expect(mockToggleUnitsMounted).not.toHaveBeenCalled();
+    });
   });
 });
