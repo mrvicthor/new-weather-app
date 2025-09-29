@@ -1,4 +1,4 @@
-import { renderHook } from "@testing-library/react";
+import { act, renderHook } from "@testing-library/react";
 import { vi } from "vitest";
 import { useToggleUnit } from "../../hooks/useToggleUnit";
 
@@ -50,5 +50,41 @@ describe("useToggleUnit", () => {
       expect.any(Function)
     );
     expect(document.removeEventListener).toHaveBeenCalledTimes(2);
+  });
+  describe("click outside behaviour", () => {
+    test("should call toggleUnitsMounted when clicking outside both menu and button", () => {
+      const { result } = renderHook(() =>
+        useToggleUnit(mockToggleUnitsMounted)
+      );
+      const mockMenuElement = {
+        contains: vi.fn().mockReturnValue(false),
+      } as unknown as HTMLDivElement;
+
+      const mockButtonElement = {
+        contains: vi.fn().mockReturnValue(false),
+      } as unknown as HTMLButtonElement;
+
+      act(() => {
+        result.current.menuRef.current = mockMenuElement;
+        result.current.buttonRef.current = mockButtonElement;
+      });
+
+      const outsideElement = document.createElement("div");
+      const mockEvent = {
+        target: outsideElement,
+      } as unknown as MouseEvent;
+
+      act(() => {
+        const calls = vi.mocked(document.addEventListener).mock.calls;
+        const mousedownHandler = calls.find(
+          (call) => call[0] === "mousedown"
+        )?.[1] as (event: MouseEvent) => void;
+        mousedownHandler(mockEvent);
+      });
+
+      expect(mockMenuElement.contains).toHaveBeenCalledWith(outsideElement);
+      expect(mockButtonElement.contains).toHaveBeenCalledWith(outsideElement);
+      expect(mockToggleUnitsMounted).toHaveBeenCalledTimes(1);
+    });
   });
 });
