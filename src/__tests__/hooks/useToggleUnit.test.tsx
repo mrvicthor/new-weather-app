@@ -86,5 +86,37 @@ describe("useToggleUnit", () => {
       expect(mockButtonElement.contains).toHaveBeenCalledWith(outsideElement);
       expect(mockToggleUnitsMounted).toHaveBeenCalledTimes(1);
     });
+
+    test("should NOT call toggleUnitsMounted when clicking inside menu", () => {
+      const { result } = renderHook(() =>
+        useToggleUnit(mockToggleUnitsMounted)
+      );
+
+      const mockMenuElement = {
+        contains: vi.fn().mockReturnValue(true),
+      } as unknown as HTMLDivElement;
+
+      const mockButtonElement = {
+        contains: vi.fn().mockReturnValue(false),
+      } as unknown as HTMLButtonElement;
+
+      act(() => {
+        result.current.menuRef.current = mockMenuElement;
+        result.current.buttonRef.current = mockButtonElement;
+      });
+
+      const mockEvent = {
+        target: document.createElement("div"),
+      } as unknown as MouseEvent;
+
+      act(() => {
+        const calls = vi.mocked(document.addEventListener).mock.calls;
+        const mousedownHandler = calls.find(
+          (call) => call[0] === "mousedown"
+        )?.[1] as (event: MouseEvent) => void;
+        mousedownHandler(mockEvent);
+      });
+      expect(mockToggleUnitsMounted).not.toHaveBeenCalled();
+    });
   });
 });
