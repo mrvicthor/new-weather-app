@@ -119,4 +119,20 @@ describe("useWeather", () => {
     expect(mockFetchLocation).not.toHaveBeenCalled();
     expect(mockFetchWeatherDetails).not.toHaveBeenCalled();
   });
+
+  test("should handle API errors gracefully", async () => {
+    const errorMessage = "Failed to fetch weather data";
+    mockFetchLocation.mockRejectedValue(new Error(errorMessage));
+    mockFetchWeatherDetails.mockResolvedValue({ temperature: 20 });
+
+    const { result } = renderHook(() => useWeather(51.5074, -0.1278), {
+      wrapper: createWrapper(),
+    });
+
+    await waitFor(() => expect(result.current.isError).toBe(true));
+
+    expect(result.current.error).toBeTruthy();
+    expect(result.current.data).toBeUndefined();
+    expect(result.current.isLoading).toBe(false);
+  });
 });
