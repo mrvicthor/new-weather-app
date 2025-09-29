@@ -135,4 +135,34 @@ describe("useWeather", () => {
     expect(result.current.data).toBeUndefined();
     expect(result.current.isLoading).toBe(false);
   });
+
+  test("should handle fetchLocation error", async () => {
+    mockFetchLocation.mockRejectedValue(new Error("Location not found"));
+    mockFetchWeatherDetails.mockResolvedValue({ temperature: 20 });
+
+    const { result } = renderHook(() => useWeather(51.5074, -0.1278), {
+      wrapper: createWrapper(),
+    });
+
+    await waitFor(() => expect(result.current.isError).toBe(true));
+
+    expect(result.current.error).toBeInstanceOf(Error);
+    expect((result.current.error as Error).message).toBe("Location not found");
+  });
+
+  test("should handle fetchWeatherDetails error", async () => {
+    mockFetchLocation.mockResolvedValue({ name: "London" });
+    mockFetchWeatherDetails.mockRejectedValue(
+      new Error("Weather service unavailable")
+    );
+    const { result } = renderHook(() => useWeather(51.5074, -0.1278), {
+      wrapper: createWrapper(),
+    });
+    await waitFor(() => expect(result.current.isError).toBe(true));
+
+    expect(result.current.error).toBeInstanceOf(Error);
+    expect((result.current.error as Error).message).toBe(
+      "Weather service unavailable"
+    );
+  });
 });
