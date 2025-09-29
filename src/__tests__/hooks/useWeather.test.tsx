@@ -165,4 +165,15 @@ describe("useWeather", () => {
       "Weather service unavailable"
     );
   });
+
+  test("should use correct query key", () => {
+    renderHook(() => useWeather(51.5074, -0.1278), {
+      wrapper: createWrapper(),
+    });
+
+    // Access the query from the cache
+    const queries = queryClient.getQueryCache().getAll();
+    expect(queries.length).toBe(1);
+    expect(queries[0].queryKey).toEqual(["location", 51.5074, -0.1278]);
+  });
 });
