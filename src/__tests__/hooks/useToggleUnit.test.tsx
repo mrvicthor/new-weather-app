@@ -35,4 +35,20 @@ describe("useToggleUnit", () => {
     );
     expect(document.addEventListener).toHaveBeenCalledTimes(2);
   });
+
+  test("should remove event listeners on unmount", () => {
+    const { unmount } = renderHook(() => useToggleUnit(mockToggleUnitsMounted));
+    unmount();
+
+    expect(document.removeEventListener).toHaveBeenCalledWith(
+      "mousedown",
+      expect.any(Function)
+    );
+
+    expect(document.removeEventListener).toHaveBeenCalledWith(
+      "keydown",
+      expect.any(Function)
+    );
+    expect(document.removeEventListener).toHaveBeenCalledTimes(2);
+  });
 });
