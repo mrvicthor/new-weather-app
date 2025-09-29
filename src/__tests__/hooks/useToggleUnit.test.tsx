@@ -219,5 +219,24 @@ describe("useToggleUnit", () => {
 
       expect(mockToggleUnitsMounted).not.toHaveBeenCalled();
     });
+
+    test("should handle Escape key with null buttonRef gracefully", () => {
+      renderHook(() => useToggleUnit(mockToggleUnitsMounted));
+
+      const mockEvent = {
+        key: "Escape",
+      } as unknown as KeyboardEvent;
+      expect(() => {
+        act(() => {
+          const calls = vi.mocked(document.addEventListener).mock.calls;
+          const keydownHandler = calls.find(
+            (call) => call[0] === "keydown"
+          )?.[1] as (event: KeyboardEvent) => void;
+          keydownHandler(mockEvent);
+        });
+      }).not.toThrow();
+
+      expect(mockToggleUnitsMounted).toHaveBeenCalledTimes(1);
+    });
   });
 });
