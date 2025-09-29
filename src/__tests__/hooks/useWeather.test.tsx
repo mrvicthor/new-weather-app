@@ -104,4 +104,19 @@ describe("useWeather", () => {
     expect(mockFetchLocation).not.toHaveBeenCalled();
     expect(mockFetchWeatherDetails).not.toHaveBeenCalled();
   });
+
+  test("should not fetch when both coordinates are null", () => {
+    const { result } = renderHook(
+      () => useWeather(null as unknown as number, null as unknown as number),
+      { wrapper: createWrapper() }
+    );
+
+    expect(result.current.isLoading).toBe(false);
+    expect(result.current.data).toBeUndefined();
+    expect(result.current.fetchStatus).toBe("idle");
+
+    // API should not be called
+    expect(mockFetchLocation).not.toHaveBeenCalled();
+    expect(mockFetchWeatherDetails).not.toHaveBeenCalled();
+  });
 });
