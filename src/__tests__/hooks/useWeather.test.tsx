@@ -218,4 +218,42 @@ describe("useWeather", () => {
     expect(mockFetchLocation).toHaveBeenCalledTimes(2);
     expect(mockFetchWeatherDetails).toHaveBeenCalledTimes(2);
   });
+
+  test("should fetch both API calls in parallel", async () => {
+    const mockLocationData = { name: "London" };
+    const mockWeatherData = { temperature: 20 };
+
+    let locationResolve: (value: typeof mockLocationData) => void;
+    let weatherResolve: (value: typeof mockWeatherData) => void;
+
+    const locationPromise = new Promise<typeof mockLocationData>((resolve) => {
+      locationResolve = resolve;
+    });
+
+    const weatherPromise = new Promise<typeof mockWeatherData>((resolve) => {
+      weatherResolve = resolve;
+    });
+
+    mockFetchLocation.mockReturnValue(locationPromise);
+    mockFetchWeatherDetails.mockReturnValue(weatherPromise);
+
+    const { result } = renderHook(() => useWeather(51.5074, -0.1278), {
+      wrapper: createWrapper(),
+    });
+    expect(result.current.isLoading).toBe(true);
+
+    // Both should be called immediately (not waiting for each other)
+    expect(mockFetchLocation).toHaveBeenCalledTimes(1);
+    expect(mockFetchWeatherDetails).toHaveBeenCalledTimes(1);
+
+    locationResolve!(mockLocationData);
+    weatherResolve!(mockWeatherData);
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+    expect(result.current.data).toEqual({
+      location: mockLocationData,
+      weather: mockWeatherData,
+    });
+  });
 });
