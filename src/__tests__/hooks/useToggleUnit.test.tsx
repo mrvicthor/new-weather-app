@@ -238,5 +238,36 @@ describe("useToggleUnit", () => {
 
       expect(mockToggleUnitsMounted).toHaveBeenCalledTimes(1);
     });
+    test("should test multiple keyboard events", () => {
+      const { result } = renderHook(() =>
+        useToggleUnit(mockToggleUnitsMounted)
+      );
+      const mockFocus = vi.fn();
+      const mockButtonElement = {
+        focus: mockFocus,
+      } as unknown as HTMLButtonElement;
+
+      act(() => {
+        result.current.buttonRef.current = mockButtonElement;
+      });
+
+      const escapeEvent = { key: "Escape" } as unknown as KeyboardEvent;
+      const enterEvent = { key: "Enter" } as unknown as KeyboardEvent;
+      const arrowEvent = { key: "ArrowDown" } as unknown as KeyboardEvent;
+
+      act(() => {
+        const calls = vi.mocked(document.addEventListener).mock.calls;
+        const keydownHandler = calls.find(
+          (call) => call[0] === "keydown"
+        )?.[1] as (event: KeyboardEvent) => void;
+
+        keydownHandler(escapeEvent);
+        keydownHandler(enterEvent);
+        keydownHandler(arrowEvent);
+      });
+
+      expect(mockToggleUnitsMounted).toHaveBeenCalledTimes(1);
+      expect(mockFocus).toHaveBeenCalledTimes(1);
+    });
   });
 });
