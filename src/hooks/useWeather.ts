@@ -14,6 +14,7 @@ export function useWeather(latitude: number, longitude: number) {
 
       return { location, weather };
     },
+    staleTime: 1000 * 60, // 5 minutes
     enabled: latitude != null && longitude != null,
   });
 }

@@ -256,4 +256,40 @@ describe("useWeather", () => {
       weather: mockWeatherData,
     });
   });
+
+  test("should cache results based on query key", async () => {
+    const mockLocationData = { name: "London" };
+    const mockWeatherData = { temperature: 20 };
+
+    mockFetchLocation.mockResolvedValue(mockLocationData);
+    mockFetchWeatherDetails.mockResolvedValue(mockWeatherData);
+
+    // First render
+    const { result: result1, unmount } = renderHook(
+      () => useWeather(51.5074, -0.1278),
+      { wrapper: createWrapper() }
+    );
+
+    await waitFor(() => expect(result1.current.isSuccess).toBe(true));
+
+    expect(mockFetchLocation).toHaveBeenCalledTimes(1);
+    expect(mockFetchWeatherDetails).toHaveBeenCalledTimes(1);
+
+    unmount();
+
+    // second render with same coordinates should use cache
+    const { result: result2 } = renderHook(() => useWeather(51.5074, -0.1278), {
+      wrapper: createWrapper(),
+    });
+
+    // should get data immediately from cache
+    expect(result2.current.data).toEqual({
+      location: mockLocationData,
+      weather: mockWeatherData,
+    });
+
+    // should not make additional API calls
+    expect(mockFetchLocation).toHaveBeenCalledTimes(1);
+    expect(mockFetchWeatherDetails).toHaveBeenCalledTimes(1);
+  });
 });
