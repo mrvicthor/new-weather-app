@@ -149,16 +149,11 @@ describe("Header Component", () => {
   describe("Integration Tests", () => {
     test("should toggle menu visibility when button is clicked", async () => {
       const user = userEvent.setup();
-      render(<Header />);
+      const { rerender } = render(<Header />);
 
       const unitsButton = screen.getByRole("button", { name: /units/i });
       const unitsMenu = screen.queryByTestId("units-menu");
-      mockUseLocationStore.mockImplementation((selector) => {
-        return selector({
-          isUnitsMounted: false,
-          toggleUnitsMounted: mockToggleUnitsMounted,
-        } as unknown as LocationStore);
-      });
+
       expect(unitsMenu).not.toBeInTheDocument();
       await user.click(unitsButton);
 
@@ -168,6 +163,9 @@ describe("Header Component", () => {
           toggleUnitsMounted: mockToggleUnitsMounted,
         } as unknown as LocationStore);
       });
+
+      rerender(<Header />);
+      expect(screen.getByTestId("units-menu")).toBeInTheDocument();
     });
   });
 });
