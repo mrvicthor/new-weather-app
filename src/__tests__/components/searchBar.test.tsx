@@ -51,4 +51,18 @@ describe("SearchBar Component", () => {
     const inputField = screen.getByTestId("search-input") as HTMLInputElement;
     expect(inputField.value).toBe("Tokyo");
   });
+
+  test("should disable search button when input is empty", () => {
+    render(<SearchBar />);
+    const searchButton = screen.getByRole("button", { name: /search/i });
+    expect(searchButton).toBeDisabled();
+  });
+
+  test("should enable search button when input has value", () => {
+    currentSearchQuery = "Paris";
+
+    render(<SearchBar />);
+    const searchButton = screen.getByRole("button", { name: /search/i });
+    expect(searchButton).not.toBeDisabled();
+  });
 });
