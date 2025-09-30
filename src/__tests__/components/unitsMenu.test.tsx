@@ -79,4 +79,23 @@ describe("UnitsMenu Component", () => {
     });
     expect(button).toHaveTextContent("Switch to Metric");
   });
+
+  test("should call setSelectedTemperature when temperature option is clicked", async () => {
+    const user = userEvent.setup();
+    render(<UnitsMenu menuRef={menuRef} />);
+
+    const celsiusOption = screen.getByRole("menuitem", { name: /celsius/i });
+    const fahrenheitOption = screen.getByRole("menuitem", {
+      name: /fahrenheit/i,
+    });
+
+    expect(celsiusOption).toBeInTheDocument();
+    expect(fahrenheitOption).toBeInTheDocument();
+
+    await user.click(fahrenheitOption);
+    expect(mockSetSelectedTemperature).toHaveBeenCalledWith("Fahrenheit");
+
+    await user.click(celsiusOption);
+    expect(mockSetSelectedTemperature).toHaveBeenCalledWith("Celsius");
+  });
 });
