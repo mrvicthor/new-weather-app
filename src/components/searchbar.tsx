@@ -20,6 +20,7 @@ const SearchBar = () => {
       />
       <input
         placeholder="Search for a place..."
+        data-testid="search-input"
         value={searchQuery}
         onChange={handleInputChange}
         className="bg-[#262540] h-14 md:flex-1 rounded-xl pl-12 pr-4 placeholder:text-[#D4D3D9] text-white"
