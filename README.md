@@ -14,7 +14,6 @@ This is a solution to the [Weather app challenge on Frontend Mentor](https://www
   - [Continued development](#continued-development)
   - [Useful resources](#useful-resources)
 - [Author](#author)
-- [Acknowledgments](#acknowledgments)
 
 ## Overview
 
@@ -54,3 +53,42 @@ Users should be able to:
 - [React](https://reactjs.org/) - JS library
 - [Motion](https://motion.dev/docs/react) - Motion for React
 - [TailwindCSS](https://tailwindcss.com/) - For styles
+- [TanStack Query](https://tanstack.com/query/latest) - Powerful asynchronous state management, server-state utilities and data fetching
+
+### What I learned
+
+Working with React Query taught me how to manage server state declaratively. I used query keys to separate search results from weather details, which allowed React Query to cache and reuse data efficiently. I also learned to use the enabled flag to conditionally trigger queries, staleTime to control freshness, and even combined multiple API calls with Promise.all. Overall, React Query helped me simplify data fetching logic, reduce boilerplate, and provide a smoother UX with cached results and background updates.
+
+```js
+function useWeather(latitude: number, longitude: number) {
+  return useQuery({
+    queryKey: ["location", latitude, longitude],
+    queryFn: async () => {
+      if (latitude == null || longitude == null)
+        return Promise.reject("No location");
+      const [location, weather] = await Promise.all([
+        fetchLocation(Number(latitude), Number(longitude)),
+        fetchWeatherDetails(Number(latitude), Number(longitude)),
+      ]);
+
+      return { location, weather };
+    },
+    staleTime: 1000 * 60, // 5 minutes
+    enabled: latitude != null && longitude != null,
+  });
+}
+```
+
+### Continued development
+
+I am going to continue practicing Test Driven Development (TDD)
+
+### Useful resources
+
+- [Frontend Mentor](https://www.frontendmentor.io/challenges/weather-app-K1FhddVm49) - This helped me with the resources to complete this challenge.
+
+## Author
+
+- Website - [https://www.victoreleanya.com/]
+- Frontend Mentor - [https://www.frontendmentor.io/profile/mrvicthor]
+- Twitter - [https://x.com/eva_skillz]
