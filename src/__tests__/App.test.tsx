@@ -106,7 +106,7 @@ vi.mock("../../utils/getForecasts", () => ({
 }));
 
 vi.mock("../../utils/formatTemperature", () => ({
-  getDisplayTemperature: vi.fn((unit, temp) => temp),
+  getDisplayTemperature: vi.fn((_unit, temp) => temp),
 }));
 
 vi.mock("../../utils/convertSpeed", () => ({
