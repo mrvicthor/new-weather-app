@@ -132,5 +132,17 @@ describe("Header Component", () => {
 
       expect(mockToggleUnitsMounted).toHaveBeenCalledTimes(1);
     });
+
+    test("should handle multiple clicks on units button", async () => {
+      const user = userEvent.setup();
+      render(<Header />);
+
+      const unitsButton = screen.getByRole("button", { name: /units/i });
+      await user.click(unitsButton);
+      await user.click(unitsButton);
+      await user.click(unitsButton);
+
+      expect(mockToggleUnitsMounted).toHaveBeenCalledTimes(3);
+    });
   });
 });
