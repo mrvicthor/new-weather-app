@@ -5,6 +5,7 @@ import { useToggleUnit } from "../../hooks/useToggleUnit";
 import { render, screen } from "@testing-library/react";
 import Header from "../../components/header";
 import type { LocationStore } from "../../store/location.store";
+import userEvent from "@testing-library/user-event";
 
 vi.mock("../../hooks/useLocationStore");
 vi.mock("../../hooks/useToggleUnit");
@@ -118,6 +119,18 @@ describe("Header Component", () => {
 
       const unitsMenu = screen.getByTestId("units-menu");
       expect(unitsMenu).toBeInTheDocument();
+    });
+  });
+
+  describe("Button Interactions", () => {
+    test("should call toggleUnitsMounted when units button is clicked", async () => {
+      const user = userEvent.setup();
+      render(<Header />);
+
+      const unitsButton = screen.getByRole("button", { name: /units/i });
+      await user.click(unitsButton);
+
+      expect(mockToggleUnitsMounted).toHaveBeenCalledTimes(1);
     });
   });
 });
