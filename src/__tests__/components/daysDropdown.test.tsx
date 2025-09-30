@@ -54,7 +54,7 @@ describe("DaysDropdown Component", () => {
     });
   });
 
-  test("calls setSelectedDay and toggleDaysList when a day is clicked", async () => {
+  test("should call setSelectedDay and toggleDaysList when a day is clicked", async () => {
     const user = userEvent.setup();
     setup();
 
@@ -63,5 +63,16 @@ describe("DaysDropdown Component", () => {
 
     expect(mockSetSelectedDay).toHaveBeenCalledWith(new Date("2025-09-30"));
     expect(mockToggleDaysList).toHaveBeenCalled();
+  });
+
+  test("should call handleKeyDown when a key is pressed", async () => {
+    const user = userEvent.setup();
+
+    setup();
+    const menu = screen.getByRole("menu");
+    menu.focus();
+    await user.keyboard("{ArrowDown}");
+
+    expect(mockHandleKeyDown).toHaveBeenCalled();
   });
 });

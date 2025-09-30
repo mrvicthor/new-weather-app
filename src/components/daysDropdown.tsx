@@ -23,6 +23,7 @@ const DaysDropDown = ({
       id="days-menu"
       aria-labelledby="days-menu-button"
       onKeyDown={handleKeyDown}
+      tabIndex={0}
       className="absolute top-12 bg-[#262540] px-2 py-3 right-0 w-[11.375rem] rounded-lg z-50 border border-[#3C3B5E] shadow-lg"
     >
       {daysList.map(({ day, date }, index) => (
