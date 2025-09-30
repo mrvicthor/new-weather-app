@@ -4,6 +4,7 @@ import { useLocationStore } from "../../hooks/useLocationStore";
 import { useToggleUnit } from "../../hooks/useToggleUnit";
 import { render, screen } from "@testing-library/react";
 import Header from "../../components/header";
+import type { LocationStore } from "../../store/location.store";
 
 vi.mock("../../hooks/useLocationStore");
 vi.mock("../../hooks/useToggleUnit");
@@ -53,6 +54,28 @@ describe("Header Component", () => {
 
       const unitsButton = screen.getByRole("button", { name: /units/i });
       expect(unitsButton).toBeInTheDocument();
+    });
+  });
+
+  describe("Hook Integration", () => {
+    test("should call useLocationStore with the correct selector", () => {
+      render(<Header />);
+
+      expect(mockUseLocationStore).toHaveBeenCalledWith(expect.any(Function));
+      expect(mockUseLocationStore).toHaveBeenCalled();
+    });
+
+    test("should extract isUnitsMounted and toggleUnitsMounted from store", () => {
+      mockUseLocationStore.mockImplementation((selector) => {
+        return selector({
+          isUnitsMounted: true,
+          toggleUnitsMounted: mockToggleUnitsMounted,
+        } as unknown as LocationStore);
+      });
+      render(<Header />);
+
+      const unitsButton = screen.getByRole("button", { name: /units/i });
+      expect(unitsButton).toHaveAttribute("aria-expanded", "true");
     });
   });
 });

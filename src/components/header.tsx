@@ -3,8 +3,10 @@ import { useToggleUnit } from "../hooks/useToggleUnit";
 import UnitsMenu from "./unitsMenu";
 
 const Header = () => {
-  const { isUnitsMounted, toggleUnitsMounted } = useLocationStore(
-    (state) => state
+  const isUnitsMounted = useLocationStore((state) => state.isUnitsMounted);
+
+  const toggleUnitsMounted = useLocationStore(
+    (state) => state.toggleUnitsMounted
   );
 
   const { menuRef, buttonRef } = useToggleUnit(toggleUnitsMounted);

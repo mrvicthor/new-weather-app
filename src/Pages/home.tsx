@@ -28,19 +28,24 @@ const Home = ({
   getForecastsFn = getForecasts,
   useGeolocationHook = useGeolocation,
 } = {}) => {
-  const {
-    setLocation,
-    latitude,
-    longitude,
-    searchQuery,
-    selectedTemperature,
-    selectedWindSpeed,
-    selectedPrecipitation,
-    toggleDaysList,
-    isDayslistMounted,
-    selectedDay,
-  } = useLocationStoreHook((state) => state);
-
+  const setLocation = useLocationStoreHook((state) => state.setLocation);
+  const latitude = useLocationStoreHook((state) => state.latitude);
+  const longitude = useLocationStoreHook((state) => state.longitude);
+  const searchQuery = useLocationStoreHook((state) => state.searchQuery);
+  const selectedTemperature = useLocationStoreHook(
+    (state) => state.selectedTemperature
+  );
+  const selectedWindSpeed = useLocationStoreHook(
+    (state) => state.selectedWindSpeed
+  );
+  const selectedPrecipitation = useLocationStoreHook(
+    (state) => state.selectedPrecipitation
+  );
+  const toggleDaysList = useLocationStoreHook((state) => state.toggleDaysList);
+  const isDayslistMounted = useLocationStoreHook(
+    (state) => state.isDayslistMounted
+  );
+  const selectedDay = useLocationStoreHook((state) => state.selectedDay);
   const debouncedValue = useDebounceHook(searchQuery);
   useGeolocationHook(setLocation);
 
