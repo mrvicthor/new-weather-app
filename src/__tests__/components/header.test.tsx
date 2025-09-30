@@ -100,5 +100,24 @@ describe("Header Component", () => {
       const unitsMenu = screen.queryByTestId("units-menu");
       expect(unitsMenu).not.toBeInTheDocument();
     });
+
+    test("should render UnitsMenu when isUnitsMounted is true", () => {
+      mockUseLocationStore.mockImplementation((selector) => {
+        return selector({
+          isUnitsMounted: true,
+          toggleUnitsMounted: mockToggleUnitsMounted,
+        } as unknown as LocationStore);
+      });
+
+      mockUseToggleUnit.mockReturnValue({
+        menuRef: mockMenuRef,
+        buttonRef: mockButtonRef,
+      });
+
+      render(<Header />);
+
+      const unitsMenu = screen.getByTestId("units-menu");
+      expect(unitsMenu).toBeInTheDocument();
+    });
   });
 });
