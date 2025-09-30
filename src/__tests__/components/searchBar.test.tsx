@@ -65,4 +65,15 @@ describe("SearchBar Component", () => {
     const searchButton = screen.getByRole("button", { name: /search/i });
     expect(searchButton).not.toBeDisabled();
   });
+
+  test("should call setSearchQuery when user clears the input", async () => {
+    const user = userEvent.setup();
+    currentSearchQuery = "Berlin";
+    render(<SearchBar />);
+    const inputField = screen.getByTestId("search-input") as HTMLInputElement;
+    expect(inputField.value).toBe("Berlin");
+
+    await user.clear(inputField);
+    expect(mockSetSearchQuery).toHaveBeenCalledWith("");
+  });
 });
