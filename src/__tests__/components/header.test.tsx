@@ -30,9 +30,11 @@ describe("Header Component", () => {
     mockMenuRef = { current: null };
     mockButtonRef = { current: null };
 
-    mockUseLocationStore.mockReturnValue({
-      isUnitsMounted: false,
-      toggleUnitsMounted: mockToggleUnitsMounted,
+    mockUseLocationStore.mockImplementation((selector) => {
+      return selector({
+        isUnitsMounted: true,
+        toggleUnitsMounted: mockToggleUnitsMounted,
+      } as unknown as LocationStore);
     });
 
     mockUseToggleUnit.mockReturnValue({
@@ -76,6 +78,27 @@ describe("Header Component", () => {
 
       const unitsButton = screen.getByRole("button", { name: /units/i });
       expect(unitsButton).toHaveAttribute("aria-expanded", "true");
+    });
+
+    test("should call useToggleUnit with toggleUnitsMounted function", () => {
+      render(<Header />);
+
+      expect(mockUseToggleUnit).toHaveBeenCalledWith(mockToggleUnitsMounted);
+    });
+  });
+
+  describe("Units Menu Visibility", () => {
+    test("should NOT render UnitsMenu when isUnitsMounted is false", () => {
+      mockUseLocationStore.mockImplementation((selector) => {
+        return selector({
+          isUnitsMounted: false,
+          toggleUnitsMounted: mockToggleUnitsMounted,
+        } as unknown as LocationStore);
+      });
+      render(<Header />);
+
+      const unitsMenu = screen.queryByTestId("units-menu");
+      expect(unitsMenu).not.toBeInTheDocument();
     });
   });
 });
