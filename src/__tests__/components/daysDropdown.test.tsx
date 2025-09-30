@@ -4,6 +4,7 @@ import type { Day } from "../../types";
 import { render, screen } from "@testing-library/react";
 import DaysDropDown from "../../components/daysDropdown";
 import type { LocationStore } from "../../store/location.store";
+import userEvent from "@testing-library/user-event";
 
 vi.mock("../../hooks/useLocationStore");
 
@@ -51,5 +52,16 @@ describe("DaysDropdown Component", () => {
     daysList.forEach(({ day }) => {
       expect(screen.getByRole("menuitem", { name: day })).toBeInTheDocument();
     });
+  });
+
+  test("calls setSelectedDay and toggleDaysList when a day is clicked", async () => {
+    const user = userEvent.setup();
+    setup();
+
+    const tuesdayButton = screen.getByRole("menuitem", { name: /tuesday/i });
+    await user.click(tuesdayButton);
+
+    expect(mockSetSelectedDay).toHaveBeenCalledWith(new Date("2025-09-30"));
+    expect(mockToggleDaysList).toHaveBeenCalled();
   });
 });
