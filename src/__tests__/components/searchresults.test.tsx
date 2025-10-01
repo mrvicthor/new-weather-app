@@ -151,7 +151,6 @@ describe("SearchResults Component", () => {
 
   test("clicking on a search result should call setLocation with correct lat/lng", async () => {
     const user = userEvent.setup();
-    isLoading = false;
     debouncedValue = "springfield";
     render(
       <SearchResults
@@ -165,5 +164,20 @@ describe("SearchResults Component", () => {
 
     await user.click(cities[0]);
     expect(mockSetLocation).toHaveBeenCalledWith(39.7817, -89.6501);
+  });
+
+  test("clicking on a search result should clear the search query", async () => {
+    const user = userEvent.setup();
+    debouncedValue = "springfield";
+    render(
+      <SearchResults
+        isLoading={isLoading}
+        debouncedValue={debouncedValue}
+        searchResults={mockSearchResult}
+      />
+    );
+    const cities = Array.from(screen.getAllByRole("menuitem"));
+    await user.click(cities[0]);
+    expect(mockSetSearchQuery).toHaveBeenCalled();
   });
 });
