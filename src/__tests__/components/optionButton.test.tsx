@@ -33,4 +33,14 @@ describe("Option Button Component", () => {
 
     expect(screen.getByText(`${label} (${unit})`)).toBeInTheDocument();
   });
+
+  test("renders checkmark and background when selected", () => {
+    render(
+      <OptionButton label={label} selected={true} onClick={mockOnClick} />
+    );
+
+    const button = screen.getByRole("menuitem");
+    expect(button).toHaveClass("bg-[#302F4A]");
+    expect(screen.getByRole("img")).toBeInTheDocument();
+  });
 });

@@ -28,7 +28,9 @@ const OptionButton = ({
       {label}
       {unit && ` (${unit})`}
     </span>
-    {selected && <img src="/assets/images/icon-checkmark.svg" alt="" />}
+    {selected && (
+      <img role="img" src="/assets/images/icon-checkmark.svg" alt="" />
+    )}
   </button>
 );
 
