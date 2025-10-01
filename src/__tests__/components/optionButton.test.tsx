@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { vi } from "vitest";
 import type { Temperature } from "../../store/location.store";
 import OptionButton from "../../components/optionButton";
+import userEvent from "@testing-library/user-event";
 
 describe("Option Button Component", () => {
   const label = "Option 1";
@@ -49,5 +50,15 @@ describe("Option Button Component", () => {
       <OptionButton label={label} selected={false} onClick={mockOnClick} />
     );
     expect(screen.queryByRole("img")).not.toBeInTheDocument();
+  });
+
+  test("calls onClick when button is clicked", async () => {
+    const user = userEvent.setup();
+    render(
+      <OptionButton label={label} selected={false} onClick={mockOnClick} />
+    );
+    const button = screen.getByRole("menuitem");
+    await user.click(button);
+    expect(mockOnClick).toHaveBeenCalledTimes(1);
   });
 });
