@@ -32,6 +32,7 @@ const Home = ({
   const latitude = useLocationStoreHook((state) => state.latitude);
   const longitude = useLocationStoreHook((state) => state.longitude);
   const searchQuery = useLocationStoreHook((state) => state.searchQuery);
+
   const selectedTemperature = useLocationStoreHook(
     (state) => state.selectedTemperature
   );
@@ -86,6 +87,7 @@ const Home = ({
         <h1 className="text-center text-white text-[3.25rem] font-bold font-Bricolage">
           How’s the sky looking today?
         </h1>
+
         <section className="relative flex flex-col items-center lg:mt-16 mt-12">
           <SearchBar />
           <SearchResults
@@ -94,88 +96,94 @@ const Home = ({
             debouncedValue={debouncedValue}
           />
         </section>
+
         {searchResults && searchResults.length === 0 ? (
           <p className="text-white mt-12 text-center font-bold text-[1.75rem]">
             No search results found
           </p>
         ) : (
-          <section className="grid lg:grid-cols-3 md:grid-rows-[43.3125rem] mt-8 lg:mt-12 gap-8">
-            <div className="lg:col-span-2">
-              <Location
-                temperature={data?.weather?.current?.temperature_2m ?? 0}
-                city={data?.location?.address?.city ?? "Unknown City"}
-                state={data?.location?.address?.state ?? "Unknown State"}
-                date={formattedDate}
-                country={data?.location?.address?.country ?? "Unknown Country"}
-                weatherCode={data?.weather?.current?.weather_code}
-              />
-              <div className="grid grid-cols-2 md:grid-cols-4 mt-5 lg:mt-8 gap-6">
-                <Card
-                  title="feels like"
-                  value={getDisplayTemperature(
-                    selectedTemperature,
-                    data.weather.current.apparent_temperature
-                  )}
-                  unit="&deg;"
+          latitude &&
+          longitude && (
+            <section className="grid lg:grid-cols-3 md:grid-rows-[43.3125rem] mt-8 lg:mt-12 gap-8">
+              <div className="lg:col-span-2">
+                <Location
+                  temperature={data?.weather?.current?.temperature_2m ?? 0}
+                  city={data?.location?.address?.city ?? "Unknown City"}
+                  state={data?.location?.address?.state ?? "Unknown State"}
+                  date={formattedDate}
+                  country={
+                    data?.location?.address?.country ?? "Unknown Country"
+                  }
+                  weatherCode={data?.weather?.current?.weather_code}
                 />
-                <Card
-                  title="humidity"
-                  value={data?.weather?.current?.relative_humidity_2m}
-                  unit={data?.weather?.current_units?.relative_humidity_2m}
-                />
-                <CardWithSpace
-                  title="wind"
-                  value={convertSpeed(
-                    data?.weather?.current?.wind_speed_10m,
-                    selectedWindSpeed
-                  )}
-                  unit={selectedWindSpeed === "km/h" ? "km/h" : "mph"}
-                />
-                <CardWithSpace
-                  title="precipitation"
-                  value={convertMillimetersToInches(
-                    data?.weather?.current?.precipitation,
-                    data?.weather?.current_units?.precipitation
-                  )}
-                  unit={selectedPrecipitation === "millimeters" ? "mm" : "in"}
-                />
-              </div>
-              <div className="mt-8 lg:mt-12">
-                <p className="text-white text-[1.25rem] font-semibold">
-                  Daily forecast
-                </p>
-                <DailyForecast data={dailyForecast} />
-              </div>
-            </div>
-            <div className="bg-[#262540] rounded-[1.25rem] px-6 py-6 ">
-              <div className="flex justify-between items-center relative">
-                <p className="text-[1.25rem] font-semibold text-white">
-                  Hourly forecast
-                </p>
-                <button
-                  ref={buttonRef}
-                  onClick={toggleDaysList}
-                  aria-haspopup="true"
-                  aria-expanded={isDayslistMounted}
-                  aria-controls="days-menu"
-                  id="days-menu-button"
-                  className="py-2 px-4 bg-[#3C3B5E] flex items-center gap-1 justify-between rounded-lg capitalize text-white cursor-pointer"
-                >
-                  {formatDay}
-                  <img src="/assets/images/icon-dropdown.svg" alt="" />
-                </button>
-                {isDayslistMounted && (
-                  <DaysDropDown
-                    daysList={daysList}
-                    menuRef={menuRef}
-                    itemsRef={itemsRef}
-                    handleKeyDown={handleKeyDown}
+                <div className="grid grid-cols-2 md:grid-cols-4 mt-5 lg:mt-8 gap-6">
+                  <Card
+                    title="feels like"
+                    value={getDisplayTemperature(
+                      selectedTemperature,
+                      data.weather.current.apparent_temperature
+                    )}
+                    unit="&deg;"
                   />
-                )}
+                  <Card
+                    title="humidity"
+                    value={data?.weather?.current?.relative_humidity_2m}
+                    unit={data?.weather?.current_units?.relative_humidity_2m}
+                  />
+                  <CardWithSpace
+                    title="wind"
+                    value={convertSpeed(
+                      data?.weather?.current?.wind_speed_10m,
+                      selectedWindSpeed
+                    )}
+                    unit={selectedWindSpeed === "km/h" ? "km/h" : "mph"}
+                  />
+                  <CardWithSpace
+                    title="precipitation"
+                    value={convertMillimetersToInches(
+                      data?.weather?.current?.precipitation,
+                      data?.weather?.current_units?.precipitation
+                    )}
+                    unit={selectedPrecipitation === "millimeters" ? "mm" : "in"}
+                  />
+                </div>
+                <div className="mt-8 lg:mt-12">
+                  <p className="text-white text-[1.25rem] font-semibold">
+                    Daily forecast
+                  </p>
+                  <DailyForecast data={dailyForecast} />
+                </div>
               </div>
-              <HourlyForecasts data={hourlyForecast} />
-            </div>
-          </section>
+              <div className="bg-[#262540] rounded-[1.25rem] px-6 py-6 ">
+                <div className="flex justify-between items-center relative">
+                  <p className="text-[1.25rem] font-semibold text-white">
+                    Hourly forecast
+                  </p>
+                  <button
+                    ref={buttonRef}
+                    onClick={toggleDaysList}
+                    aria-haspopup="true"
+                    aria-expanded={isDayslistMounted}
+                    aria-controls="days-menu"
+                    id="days-menu-button"
+                    className="py-2 px-4 bg-[#3C3B5E] flex items-center gap-1 justify-between rounded-lg capitalize text-white cursor-pointer"
+                  >
+                    {formatDay}
+                    <img src="/assets/images/icon-dropdown.svg" alt="" />
+                  </button>
+                  {isDayslistMounted && (
+                    <DaysDropDown
+                      daysList={daysList}
+                      menuRef={menuRef}
+                      itemsRef={itemsRef}
+                      handleKeyDown={handleKeyDown}
+                    />
+                  )}
+                </div>
+                <HourlyForecasts data={hourlyForecast} />
+              </div>
+            </section>
+          )
         )}
       </main>
       {error && createPortalFn(<ErrorPage />, document.getElementById("root")!)}
