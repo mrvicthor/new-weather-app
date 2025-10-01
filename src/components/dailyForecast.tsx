@@ -28,7 +28,10 @@ const DailyForecast = ({ data }: DailyForecastProps) => {
               <span className="text-center block text-lg text-white font-medium">
                 {day}
               </span>
-              <img src={mapWeatherCodeToDescription(weatherCode)} />
+              <img
+                src={mapWeatherCodeToDescription(weatherCode)}
+                alt={`${day}-weather`}
+              />
               <div className="flex justify-between items-center">
                 <span className="text-white font-medium">
                   {getDisplayTemperature(selectedTemperature, maxTemp)}&deg;

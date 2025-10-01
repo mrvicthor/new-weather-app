@@ -18,11 +18,15 @@ const SearchResults = ({
       {debouncedValue && searchResults && searchResults.length > 0 && (
         <ul
           role="menu"
+          aria-label="Search Results"
+          tabIndex={0}
           className="absolute top-4 bg-[#262540] border border-[#302F4A] px-2 py-3 right-0 left-0 md:w-[33rem] rounded-lg max-h-60 overflow-y-auto z-50"
         >
           {isLoading && (
             <li
-              role="menuitem"
+              role="status"
+              aria-live="polite"
+              aria-label="Search in progress"
               className="text-white p-4 border border-[#302F4A] h-[2.4375rem] flex gap-4 items-center"
             >
               <img src="/assets/images/icon-loading.svg" alt="loading" /> Search

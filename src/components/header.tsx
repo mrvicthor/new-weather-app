@@ -31,14 +31,14 @@ const Header = () => {
         >
           <img
             src="/assets/images/icon-units.svg"
-            alt=""
+            alt="units-icon"
             className="w-4 h-[0.84375rem]"
             aria-hidden="true"
           />
           <span>units</span>
           <img
             src="/assets/images/icon-dropdown.svg"
-            alt=""
+            alt="dropdown-icon"
             aria-hidden="true"
           />
         </button>

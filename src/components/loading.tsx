@@ -44,7 +44,10 @@ const Loading = () => {
               </p>
               <button className="py-1 px-4 bg-[#3C3B5E] flex items-center gap-1 justify-between rounded-lg capitalize text-white cursor-pointer">
                 -
-                <img src="/assets/images/icon-dropdown.svg" />
+                <img
+                  src="/assets/images/icon-dropdown.svg"
+                  alt="dropdown-icon"
+                />
               </button>
             </div>
             <HourlyForecastsSkeleton />

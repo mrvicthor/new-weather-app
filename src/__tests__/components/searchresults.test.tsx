@@ -126,7 +126,7 @@ describe("SearchResults Component", () => {
         searchResults={mockSearchResult}
       />
     );
-    const loadingIndicator = screen.getByRole("menuitem", {
+    const loadingIndicator = screen.getByRole("status", {
       name: /search in progress/i,
     });
     expect(loadingIndicator).toBeInTheDocument();

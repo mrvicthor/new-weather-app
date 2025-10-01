@@ -35,6 +35,7 @@ const Location = ({
         <img
           src={mapWeatherCodeToDescription(weatherCode)}
           className="h-[7.5rem] w-[7.5rem]"
+          alt="current-weather"
         />
         <p className="text-white italic text-[6rem] font-bold">
           {getDisplayTemperature(selectedTemperature, temperature)}&deg;
