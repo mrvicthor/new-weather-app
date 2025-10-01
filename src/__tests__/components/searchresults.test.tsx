@@ -101,4 +101,47 @@ describe("SearchResults Component", () => {
     const list = document.querySelector("ul");
     expect(list).not.toBeInTheDocument();
   });
+
+  test("should render results when debouncedValue is provided and searchResults has items", () => {
+    debouncedValue = "Springfield";
+    render(
+      <SearchResults
+        debouncedValue={debouncedValue}
+        isLoading={isLoading}
+        searchResults={mockSearchResult}
+      />
+    );
+    const list = document.querySelector("ul");
+    expect(list).toBeInTheDocument();
+  });
+
+  test("should show loading indicator when isLoading is true", () => {
+    isLoading = true;
+    debouncedValue = "lagos";
+    render(
+      <SearchResults
+        isLoading={isLoading}
+        debouncedValue={debouncedValue}
+        searchResults={mockSearchResult}
+      />
+    );
+    const loadingIndicator = document.querySelector("li");
+    expect(loadingIndicator).toHaveTextContent(/search in progress/i);
+  });
+
+  test("should render city name and country for each search result", () => {
+    debouncedValue = "springfield";
+    render(
+      <SearchResults
+        debouncedValue={debouncedValue}
+        isLoading={isLoading}
+        searchResults={mockSearchResult}
+      />
+    );
+    const ul = document.querySelector("ul")!;
+    const cities = Array.from(ul.children);
+    cities.forEach((city) =>
+      expect(city.textContent).toBe("Springfield, United States")
+    );
+  });
 });
