@@ -20,4 +20,17 @@ describe("Option Button Component", () => {
     expect(screen.getByText(label)).toBeInTheDocument();
     expect(screen.queryByText(/\(.*\)/)).not.toBeInTheDocument();
   });
+
+  test("renders the label with unit if provided", () => {
+    render(
+      <OptionButton
+        label={label}
+        unit={unit}
+        selected={false}
+        onClick={mockOnClick}
+      />
+    );
+
+    expect(screen.getByText(`${label} (${unit})`)).toBeInTheDocument();
+  });
 });
