@@ -61,4 +61,14 @@ describe("Option Button Component", () => {
     await user.click(button);
     expect(mockOnClick).toHaveBeenCalledTimes(1);
   });
+
+  test("always has base classes applied", () => {
+    render(
+      <OptionButton label={label} selected={false} onClick={mockOnClick} />
+    );
+    const button = screen.getByRole("menuitem");
+    expect(button).toHaveClass(
+      "text-white h-[2.4375rem] flex items-center justify-between w-full hover:bg-[#302F4A] cursor-pointer px-2 rounded-lg font-medium"
+    );
+  });
 });
