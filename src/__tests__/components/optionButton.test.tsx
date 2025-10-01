@@ -43,4 +43,11 @@ describe("Option Button Component", () => {
     expect(button).toHaveClass("bg-[#302F4A]");
     expect(screen.getByRole("img")).toBeInTheDocument();
   });
+
+  test("does not render checkmark when not selected", () => {
+    render(
+      <OptionButton label={label} selected={false} onClick={mockOnClick} />
+    );
+    expect(screen.queryByRole("img")).not.toBeInTheDocument();
+  });
 });
