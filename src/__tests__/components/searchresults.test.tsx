@@ -2,8 +2,9 @@ import { vi } from "vitest";
 import { useLocationStore } from "../../hooks/useLocationStore";
 import type { SearchResult } from "../../types";
 import type { LocationStore } from "../../store/location.store";
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import SearchResults from "../../components/searchResult";
+import userEvent from "@testing-library/user-event";
 
 vi.mock("../../hooks/useLocationStore");
 
@@ -111,7 +112,7 @@ describe("SearchResults Component", () => {
         searchResults={mockSearchResult}
       />
     );
-    const list = document.querySelector("ul");
+    const list = screen.getByRole("menu");
     expect(list).toBeInTheDocument();
   });
 
@@ -125,7 +126,10 @@ describe("SearchResults Component", () => {
         searchResults={mockSearchResult}
       />
     );
-    const loadingIndicator = document.querySelector("li");
+    const loadingIndicator = screen.getByRole("menuitem", {
+      name: /search in progress/i,
+    });
+    expect(loadingIndicator).toBeInTheDocument();
     expect(loadingIndicator).toHaveTextContent(/search in progress/i);
   });
 
@@ -143,5 +147,23 @@ describe("SearchResults Component", () => {
     cities.forEach((city) =>
       expect(city.textContent).toBe("Springfield, United States")
     );
+  });
+
+  test("clicking on a search result should call setLocation with correct lat/lng", async () => {
+    const user = userEvent.setup();
+    isLoading = false;
+    debouncedValue = "springfield";
+    render(
+      <SearchResults
+        isLoading={isLoading}
+        debouncedValue={debouncedValue}
+        searchResults={mockSearchResult}
+      />
+    );
+
+    const cities = Array.from(screen.getAllByRole("menuitem"));
+
+    await user.click(cities[0]);
+    expect(mockSetLocation).toHaveBeenCalledWith(39.7817, -89.6501);
   });
 });
