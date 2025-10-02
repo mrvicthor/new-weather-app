@@ -14,13 +14,13 @@ const SearchResults = ({
 }: SearchResultProps) => {
   const { setLocation, setSearchQuery } = useLocationStore((state) => state);
   return (
-    <div className="relative w-[41rem] gap-4">
+    <div className="absolute top-16 w-full lg:w-[41rem] flex md:gap-4">
       {debouncedValue && searchResults && searchResults.length > 0 && (
         <ul
           role="menu"
           aria-label="Search Results"
           tabIndex={0}
-          className="absolute top-4 bg-[#262540] border border-[#302F4A] px-2 py-3 right-0 left-0 md:w-[33rem] rounded-lg max-h-60 overflow-y-auto z-50"
+          className=" bg-[#262540] border border-[#302F4A] px-2 py-3 flex-1 rounded-lg max-h-60 overflow-y-auto z-50"
         >
           {isLoading && (
             <li
@@ -48,6 +48,7 @@ const SearchResults = ({
           ))}
         </ul>
       )}
+      <div className="md:w-[7.125rem]" />
     </div>
   );
 };
